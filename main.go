@@ -1,12 +1,12 @@
 package main
 
 import (
-	"os"
+	// "os"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
-	"gopkg.in/src-d/go-git.v4"
+	// "gopkg.in/src-d/go-git.v4"
 )
 
 var (
@@ -39,20 +39,21 @@ func main() {
 	kingpin.Parse()
 
 	log.Info("Here we go!")
-
-	url := "https://github.com/shelmangroup/oidc-agent.git"
-	log.Infof("git clone %s", url)
-
-	s, err := NewStorage()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = git.Clone(s, nil, &git.CloneOptions{
-		URL:      url,
-		Progress: os.Stdout,
-	})
-
+	//
+	// url := "https://github.com/shelmangroup/oidc-agent.git"
+	// log.Infof("git clone %s", url)
+	//
+	// s, err := NewStorage()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	//
+	// _, err = git.Clone(s, nil, &git.CloneOptions{
+	// 	URL:      url,
+	// 	Progress: os.Stdout,
+	// })
+	//
+	err := StartServer()
 	if err != nil {
 		log.Fatal(err)
 	}
