@@ -24,6 +24,7 @@ func StartServer() error {
 		// File Backend
 		s := strings.SplitN(strings.TrimLeft(r.URL.Path, "/"), "/", 2)
 		ep, err := transport.NewEndpoint(path.Join("file://", wd, s[0]))
+		log.Debugf("Repo path: %v", ep.Path)
 		if err != nil {
 			log.Fatalf("Tansport error: %v", err)
 		}
@@ -52,7 +53,6 @@ func StartServer() error {
 				[]byte(""),
 			}
 			w.Header().Set("Content-Type", "application/x-git-upload-pack-advertisement")
-			log.Debugf("%+v", w)
 			advs.Encode(w)
 			return
 		}
