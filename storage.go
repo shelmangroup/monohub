@@ -87,6 +87,7 @@ func (s *Storage) EncodedObject(t plumbing.ObjectType, h plumbing.Hash) (plumbin
 	ctx := context.Background()
 
 	key := s.buildObjectKey(h, t)
+	log.Debug(key)
 
 	r, err := s.bucket.Object(key).NewReader(ctx)
 	if err == gcs.ErrObjectNotExist {
@@ -213,6 +214,7 @@ func (s *Storage) Reference(n plumbing.ReferenceName) (*plumbing.Reference, erro
 		return nil, err
 	}
 
+	log.Debugf("Ref: %v: %v", n.String(), string(data))
 	return plumbing.NewReferenceFromStrings(
 		n.String(),
 		string(data),
@@ -226,17 +228,12 @@ func (s *Storage) SetReference(ref *plumbing.Reference) error {
 	key := s.buildReferenceKey(ref.Name())
 
 	w := s.bucket.Object(key).NewWriter(ctx)
-
-	_, err := fmt.Fprint(w, ref.Target())
+	_, err := w.Write([]byte(ref.Target()))
 	if err != nil {
 		return err
 	}
 
-	if err := w.Close(); err != nil {
-		return err
-	}
-
-	return nil
+	return w.Close()
 }
 
 func (s *Storage) RemoveReference(n plumbing.ReferenceName) error {
@@ -252,7 +249,6 @@ func (s *Storage) CheckAndSetReference(ref, old *plumbing.Reference) error {
 }
 
 func (s *Storage) buildReferenceKey(n plumbing.ReferenceName) string {
-	log.Debug("buildReferenceKey")
 	return n.String()
 }
 
@@ -271,6 +267,7 @@ func (s *Storage) IterReferences() (storer.ReferenceIter, error) {
 			return nil, err
 		}
 
+		log.Debug(o.Name)
 		r, err := s.bucket.Object(o.Name).NewReader(ctx)
 		if err != nil {
 			return nil, err
