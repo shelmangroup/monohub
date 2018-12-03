@@ -39,21 +39,9 @@ func main() {
 	kingpin.Parse()
 
 	log.Info("Here we go!")
-	//
-	// url := "https://github.com/shelmangroup/oidc-agent.git"
-	// log.Infof("git clone %s", url)
-	//
-	// s, err := NewStorage()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// _, err = git.Clone(s, nil, &git.CloneOptions{
-	// 	URL:      url,
-	// 	Progress: os.Stdout,
-	// })
-	//
-	err := StartServer()
+
+	server := NewGitServer()
+	err := server.Serve()
 	if err != nil {
 		log.Fatal(err)
 	}

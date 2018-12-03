@@ -1,76 +1,81 @@
 package main
 
 import (
-	"compress/gzip"
-	"io"
+	"bytes"
 	"net/http"
-	"os"
-	"path"
-	"strings"
+	"net/http/cgi"
+	"os/exec"
+	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/src-d/go-git.v4/plumbing/protocol/packp"
-	"gopkg.in/src-d/go-git.v4/plumbing/transport"
-	"gopkg.in/src-d/go-git.v4/plumbing/transport/server"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-func StartServer() error {
-	log.Info("Starting server on :8822")
-	wd, _ := os.Getwd()
+type GitServer struct {
+	CGI        string
+	RepoPath   string
+	httpServer *http.Server
+}
 
-	return http.ListenAndServe(":8822", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Cache-Control", "no-cache")
+var (
+	listenAddress = kingpin.Flag("listen-address", "HTTP address").Default(":8822").String()
+	repoPath      = kingpin.Flag("repository-path", "Git repository path").Default(".").String()
+)
 
-		// File Backend
-		s := strings.SplitN(strings.TrimLeft(r.URL.Path, "/"), "/", 2)
-		ep, err := transport.NewEndpoint(path.Join("file://", wd, s[0]))
-		log.Debugf("Repo path: %v", ep.Path)
-		if err != nil {
-			log.Fatalf("Tansport error: %v", err)
-		}
-		ups, err := server.DefaultServer.NewUploadPackSession(ep, nil)
-		if err != nil {
-			log.Fatalf("NewServer error: %v", err)
-		}
+func NewGitServer() *GitServer {
+	dir, err := exec.Command("git", "--exec-path").Output()
+	if err != nil {
+		log.Fatal("Could not find git binary")
+	}
+	dir = bytes.TrimRight(dir, "\r\n")
+	cgi := filepath.Join(string(dir), "git-http-backend")
+	log.Debugf("Git CGI command line: %s", cgi)
 
-		// GCS Backend
-		// ep, err := transport.NewEndpoint("http://")
-		// if err != nil {
-		// 	log.Fatalf("Tansport error: %v", err)
-		// }
-		// ups, err := server.NewServer(NewGCSStorageLoader()).NewUploadPackSession(ep, nil)
-		// if err != nil {
-		// 	log.Fatalf("NewServer error: %v", err)
-		// }
+	server := &GitServer{
+		CGI:      cgi,
+		RepoPath: *repoPath,
+	}
 
-		if strings.Contains(r.URL.Path, "info") {
-			advs, err := ups.AdvertisedReferences()
-			if err != nil {
-				log.Fatalf("AdvertisedRef error: %v", err)
-			}
-			advs.Prefix = [][]byte{
-				[]byte("# service=git-upload-pack"),
-				[]byte(""),
-			}
-			w.Header().Set("Content-Type", "application/x-git-upload-pack-advertisement")
-			advs.Encode(w)
-			return
-		}
-		defer r.Body.Close()
-		var rdr io.ReadCloser = r.Body
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", server.gitHandler)
+	server.httpServer = &http.Server{
+		Addr:    *listenAddress,
+		Handler: mux,
+	}
 
-		if r.Header.Get("Content-Encoding") == "gzip" {
-			rdr, _ = gzip.NewReader(r.Body)
-		}
+	return server
+}
 
-		upakreq := packp.NewUploadPackRequest()
-		upakreq.Decode(rdr)
+func (s *GitServer) Serve() error {
+	log.WithField("address", *listenAddress).Info("Starting server")
 
-		up, err := ups.UploadPack(r.Context(), upakreq)
-		if err != nil {
-			log.Fatalf("UploadPack error: %v", err)
-		}
-		w.Header().Set("Content-Type", "application/x-git-upload-pack-result")
-		up.Encode(w)
-	}))
+	return s.httpServer.ListenAndServe()
+}
+
+func (s *GitServer) gitHandler(w http.ResponseWriter, r *http.Request) {
+
+	env := []string{
+		"GIT_PROJECT_ROOT=" + s.RepoPath,
+		"GIT_HTTP_EXPORT_ALL=1",
+		"GIT_TRACE=2",
+		"REMOTE_USER=dln",
+		"GIT_HTTP_MAX_REQUEST_BUFFER=4000M",
+	}
+
+	// env = append(env, "REMOTE_USER="+username)
+
+	log.Debug("Running git handler")
+	log.Debug("Request: ", r)
+	var stdErr bytes.Buffer
+	handler := &cgi.Handler{
+		Path:   s.CGI,
+		Root:   "/",
+		Env:    env,
+		Stderr: &stdErr,
+	}
+	handler.ServeHTTP(w, r)
+
+	if stdErr.Len() > 0 {
+		log.Infof("[git] %s", stdErr.String())
+	}
 }
