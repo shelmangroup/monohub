@@ -10,16 +10,21 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/stats/view"
 )
 
-type HttpServer struct{}
+type HttpServer struct {
+	storage *storage.Storage
+}
 
-func NewHttpServer() *HttpServer {
-	return &HttpServer{}
+func NewHttpServer(storage *storage.Storage) *HttpServer {
+	return &HttpServer{
+		storage: storage,
+	}
 }
 
 func (s *HttpServer) Run() error {
@@ -31,8 +36,8 @@ func (s *HttpServer) Run() error {
 	router.HandleFunc("/git-upload-pack", s.uploadPackHandler).Methods("POST")
 	router.HandleFunc("/git-receive-pack", s.receivePackHandler).Methods("POST")
 
-	log.WithField("address", *httpListen).Info("Starting HTTP server")
-	return http.ListenAndServe(*httpListen,
+	log.WithField("address", *listenAddress).Info("Starting HTTP server")
+	return http.ListenAndServe(*listenAddress,
 		&ochttp.Handler{
 			Handler:     router,
 			Propagation: &b3.HTTPFormat{},

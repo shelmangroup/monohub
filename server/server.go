@@ -9,18 +9,12 @@ import (
 
 	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
-	// "go.opencensus.io/exporter/jaeger"
 	"go.opencensus.io/examples/exporter"
 	"go.opencensus.io/exporter/prometheus"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 	"go.opencensus.io/zpages"
 	"gopkg.in/alecthomas/kingpin.v2"
-)
-
-var (
-	httpListen = kingpin.Flag("http-listen", "HTTP API Listen address.").Default(":8822").String()
-	traceUrl   = kingpin.Flag("trace-url", "Jaeger Trace URL.").Default("http://localhost:14268").String()
 )
 
 type Server struct {
@@ -31,6 +25,7 @@ type Server struct {
 
 var (
 	listenAddress = kingpin.Flag("listen-address", "HTTP address").Default(":8822").String()
+	traceUrl      = kingpin.Flag("trace-url", "Jaeger Trace URL.").Default("http://localhost:14268").String()
 )
 
 func NewServer(storage *storage.Storage) *Server {
@@ -38,39 +33,30 @@ func NewServer(storage *storage.Storage) *Server {
 	server := &Server{
 		storage: storage,
 	}
-	server.gitHandler = NewGitHandler(storage)
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", server.gitHandler.HandleRequest)
-	server.httpServer = &http.Server{
-		Addr:    *listenAddress,
-		Handler: mux,
-	}
+	// server.gitHandler = NewGitHandler(storage)
+	//
+	// mux := http.NewServeMux()
+	// mux.HandleFunc("/", server.gitHandler.HandleRequest)
+	// server.httpServer = &http.Server{
+	// 	Addr:    *listenAddress,
+	// 	Handler: mux,
+	// }
 
 	return server
 }
 
 func (s *Server) Serve() error {
-	log.WithField("address", *listenAddress).Info("Starting server")
-
 	errCh := make(chan error)
+
 	pe, err := prometheus.NewExporter(prometheus.Options{
 		Namespace: "monohub",
 	})
 	if err != nil {
-		log.Fatalf("Failed to create the Prometheus stats exporter: %v", err)
+		return err
 	}
 	view.RegisterExporter(pe)
 
 	exporter := &exporter.PrintExporter{}
-	// exporter, err := jaeger.NewExporter(jaeger.Options{
-	// 	Endpoint:    *traceUrl,
-	// 	ServiceName: "gannet",
-	// })
-	// defer exporter.Flush()
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
 	trace.RegisterExporter(exporter)
 	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 	view.SetReportingPeriod(1 * time.Second)
@@ -86,7 +72,7 @@ func (s *Server) Serve() error {
 	}()
 
 	go func() {
-		h := NewHttpServer()
+		h := NewHttpServer(s.storage)
 		if err := h.Run(); err != nil {
 			errCh <- err
 		}
