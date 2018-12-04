@@ -1,81 +1,74 @@
 package server
 
 import (
-	"bytes"
 	"net/http"
-	"net/http/cgi"
-	"os/exec"
-	"path/filepath"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	log "github.com/sirupsen/logrus"
+	// "go.opencensus.io/exporter/jaeger"
+	"go.opencensus.io/examples/exporter"
+	"go.opencensus.io/exporter/prometheus"
+	"go.opencensus.io/stats/view"
+	"go.opencensus.io/trace"
+	"go.opencensus.io/zpages"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-type GitServer struct {
-	CGI        string
-	RepoPath   string
-	httpServer *http.Server
-}
-
 var (
-	listenAddress = kingpin.Flag("listen-address", "HTTP address").Default(":8822").String()
-	repoPath      = kingpin.Flag("repository-path", "Git repository path").Default(".").String()
+	httpListen = kingpin.Flag("http-listen", "HTTP API Listen address.").Default(":8822").String()
+	traceUrl   = kingpin.Flag("trace-url", "Jaeger Trace URL.").Default("http://localhost:14268").String()
 )
 
-func NewGitServer() *GitServer {
-	dir, err := exec.Command("git", "--exec-path").Output()
+func NewGitServer() {
+	errCh := make(chan error)
+	pe, err := prometheus.NewExporter(prometheus.Options{
+		Namespace: "monohub",
+	})
 	if err != nil {
-		log.Fatal("Could not find git binary")
+		log.Fatalf("Failed to create the Prometheus stats exporter: %v", err)
 	}
-	dir = bytes.TrimRight(dir, "\r\n")
-	cgi := filepath.Join(string(dir), "git-http-backend")
-	log.Debugf("Git CGI command line: %s", cgi)
+	view.RegisterExporter(pe)
 
-	server := &GitServer{
-		CGI:      cgi,
-		RepoPath: *repoPath,
-	}
+	exporter := &exporter.PrintExporter{}
+	// exporter, err := jaeger.NewExporter(jaeger.Options{
+	// 	Endpoint:    *traceUrl,
+	// 	ServiceName: "gannet",
+	// })
+	// defer exporter.Flush()
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+	trace.RegisterExporter(exporter)
+	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
+	view.SetReportingPeriod(1 * time.Second)
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", server.gitHandler)
-	server.httpServer = &http.Server{
-		Addr:    *listenAddress,
-		Handler: mux,
-	}
+	go func() {
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", pe)
+		zpages.Handle(mux, "/")
+		log.WithField("address", ":8888").Info("Starting metrics server")
+		if err := http.ListenAndServe(":8888", mux); err != nil {
+			errCh <- err
+		}
+	}()
 
-	return server
-}
+	go func() {
+		h := NewHttpServer()
+		if err := h.Run(); err != nil {
+			errCh <- err
+		}
+	}()
 
-func (s *GitServer) Serve() error {
-	log.WithField("address", *listenAddress).Info("Starting server")
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 
-	return s.httpServer.ListenAndServe()
-}
-
-func (s *GitServer) gitHandler(w http.ResponseWriter, r *http.Request) {
-
-	env := []string{
-		"GIT_PROJECT_ROOT=" + s.RepoPath,
-		"GIT_HTTP_EXPORT_ALL=1",
-		"GIT_TRACE=2",
-		"REMOTE_USER=dln",
-		"GIT_HTTP_MAX_REQUEST_BUFFER=4000M",
-	}
-
-	// env = append(env, "REMOTE_USER="+username)
-
-	log.Debug("Running git handler")
-	log.Debug("Request: ", r)
-	var stdErr bytes.Buffer
-	handler := &cgi.Handler{
-		Path:   s.CGI,
-		Root:   "/",
-		Env:    env,
-		Stderr: &stdErr,
-	}
-	handler.ServeHTTP(w, r)
-
-	if stdErr.Len() > 0 {
-		log.Infof("[git] %s", stdErr.String())
+	select {
+	case <-sigCh:
+		log.Warn("Received SIGTERM, exiting gracefully...")
+	case err := <-errCh:
+		log.WithError(err).Error("Got an error from errCh, exiting gracefully")
 	}
 }
