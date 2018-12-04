@@ -40,7 +40,7 @@ func main() {
 
 	log.Info("Here we go!")
 
-	srv := server.NewGitServer()
+	srv := server.NewServer()
 	err := srv.Serve()
 	if err != nil {
 		log.Fatal(err)
