@@ -27,7 +27,6 @@ func (s *HttpServer) Run() error {
 		return err
 	}
 	router := mux.NewRouter()
-	router.Use(loggingMiddleware)
 	router.HandleFunc("/info/refs", s.getInfoRefsHandler).Queries("service", "{service}").Methods("GET")
 	router.HandleFunc("/git-upload-pack", s.uploadPackHandler).Methods("POST")
 	router.HandleFunc("/git-receive-pack", s.receivePackHandler).Methods("POST")
@@ -124,11 +123,4 @@ func getServiceType(r *http.Request) string {
 		return ""
 	}
 	return strings.Replace(serviceType, "git-", "", 1)
-}
-
-func loggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Infof(r.RequestURI)
-		next.ServeHTTP(w, r)
-	})
 }
