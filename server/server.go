@@ -3,27 +3,27 @@ package server
 import (
 	"net/http"
 
+	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type Server struct {
-	RepoPath   string
+	storage    *storage.Storage
 	gitHandler *GitHandler
 	httpServer *http.Server
 }
 
 var (
 	listenAddress = kingpin.Flag("listen-address", "HTTP address").Default(":8822").String()
-	repoPath      = kingpin.Flag("repository-path", "Git repository path").Default(".").String()
 )
 
-func NewServer() *Server {
+func NewServer(storage *storage.Storage) *Server {
 
 	server := &Server{
-		RepoPath: *repoPath,
+		storage: storage,
 	}
-	server.gitHandler = NewGitHandler(server)
+	server.gitHandler = NewGitHandler(storage)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", server.gitHandler.HandleRequest)

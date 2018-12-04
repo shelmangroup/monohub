@@ -7,15 +7,16 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
 )
 
 type GitHandler struct {
-	CGI    string
-	server *Server
+	CGI     string
+	storage *storage.Storage
 }
 
-func NewGitHandler(server *Server) *GitHandler {
+func NewGitHandler(storage *storage.Storage) *GitHandler {
 	dir, err := exec.Command("git", "--exec-path").Output()
 	if err != nil {
 		log.Fatal("Could not find git binary")
@@ -25,15 +26,15 @@ func NewGitHandler(server *Server) *GitHandler {
 	log.Debugf("Git CGI command line: %s", cgi)
 
 	return &GitHandler{
-		CGI:    cgi,
-		server: server,
+		CGI:     cgi,
+		storage: storage,
 	}
 }
 
 func (h *GitHandler) HandleRequest(w http.ResponseWriter, r *http.Request) {
 
 	env := []string{
-		"GIT_PROJECT_ROOT=" + h.server.RepoPath,
+		"GIT_PROJECT_ROOT=" + h.storage.RepoPath,
 		"GIT_HTTP_EXPORT_ALL=1",
 		"GIT_TRACE=2",
 		"REMOTE_USER=dln",
