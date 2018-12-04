@@ -4,9 +4,9 @@ import (
 	// "os"
 	"strings"
 
+	"github.com/shelmangroup/monohub/server"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
-	// "gopkg.in/src-d/go-git.v4"
 )
 
 var (
@@ -40,8 +40,8 @@ func main() {
 
 	log.Info("Here we go!")
 
-	server := NewGitServer()
-	err := server.Serve()
+	srv := server.NewGitServer()
+	err := srv.Serve()
 	if err != nil {
 		log.Fatal(err)
 	}
