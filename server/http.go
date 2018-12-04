@@ -41,12 +41,15 @@ func (s *HttpServer) Run() error {
 	)
 }
 
-func (s *HttpServer) getInfoRefsHandler(w http.ResponseWriter, req *http.Request) {
-	log.Debug("infoRefs")
-
+func (s *HttpServer) setNoCacheHeaders(w http.ResponseWriter) {
 	w.Header().Set("Expires", "Fri, 01 Jan 1980 00:00:00 GMT")
 	w.Header().Set("Pragma", "no-cache")
 	w.Header().Set("Cache-Control", "no-cache, max-age=0, must-revalidate")
+}
+
+func (s *HttpServer) getInfoRefsHandler(w http.ResponseWriter, req *http.Request) {
+	log.Debug("infoRefs")
+	s.setNoCacheHeaders(w)
 
 	service := getServiceType(req)
 	cmd := exec.Command("git", service, "--stateless-rpc", "--advertise-refs", ".")
@@ -67,8 +70,15 @@ func (s *HttpServer) getInfoRefsHandler(w http.ResponseWriter, req *http.Request
 
 func (s *HttpServer) uploadPackHandler(w http.ResponseWriter, req *http.Request) {
 	log.Debug("uploadPack")
-	service := "upload-pack"
+	s.serviceRPC("upload-pack", w, req)
+}
 
+func (s *HttpServer) receivePackHandler(w http.ResponseWriter, req *http.Request) {
+	log.Debug("receivePack")
+	s.serviceRPC("receive-pack", w, req)
+}
+
+func (s *HttpServer) serviceRPC(service string, w http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
 
 	w.Header().Set("Content-Type", fmt.Sprintf("application/x-git-%s-result", service))
@@ -95,41 +105,6 @@ func (s *HttpServer) uploadPackHandler(w http.ResponseWriter, req *http.Request)
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
 		log.Errorf("fail to serve RPC(%s): %v - %s", service, err, stderr)
-		return
-	}
-	return
-}
-
-func (s *HttpServer) receivePackHandler(w http.ResponseWriter, req *http.Request) {
-	log.Debug("receivePack")
-	service := "receive-pack"
-
-	defer req.Body.Close()
-
-	w.Header().Set("Content-Type", fmt.Sprintf("application/x-git-%s-result", service))
-
-	var err error
-	var reqBody = req.Body
-
-	// Handle GZIP.
-	if req.Header.Get("Content-Encoding") == "gzip" {
-		reqBody, err = gzip.NewReader(reqBody)
-		if err != nil {
-			log.Errorf("fail to create gzip reader: %v", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-	}
-
-	var stderr bytes.Buffer
-	cmd := exec.Command("git", service, "--stateless-rpc", ".")
-	cmd.Dir = "."
-
-	cmd.Stdout = w
-	cmd.Stdin = reqBody
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
-		log.Errorf("fail to serve RPC(%s): %v - %v", service, err, stderr)
 		return
 	}
 	return
