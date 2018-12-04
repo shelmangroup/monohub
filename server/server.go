@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
 	// "go.opencensus.io/exporter/jaeger"
 	"go.opencensus.io/examples/exporter"
@@ -22,7 +23,36 @@ var (
 	traceUrl   = kingpin.Flag("trace-url", "Jaeger Trace URL.").Default("http://localhost:14268").String()
 )
 
-func NewGitServer() {
+type Server struct {
+	storage    *storage.Storage
+	gitHandler *GitHandler
+	httpServer *http.Server
+}
+
+var (
+	listenAddress = kingpin.Flag("listen-address", "HTTP address").Default(":8822").String()
+)
+
+func NewServer(storage *storage.Storage) *Server {
+
+	server := &Server{
+		storage: storage,
+	}
+	server.gitHandler = NewGitHandler(storage)
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", server.gitHandler.HandleRequest)
+	server.httpServer = &http.Server{
+		Addr:    *listenAddress,
+		Handler: mux,
+	}
+
+	return server
+}
+
+func (s *Server) Serve() error {
+	log.WithField("address", *listenAddress).Info("Starting server")
+
 	errCh := make(chan error)
 	pe, err := prometheus.NewExporter(prometheus.Options{
 		Namespace: "monohub",
@@ -70,5 +100,8 @@ func NewGitServer() {
 		log.Warn("Received SIGTERM, exiting gracefully...")
 	case err := <-errCh:
 		log.WithError(err).Error("Got an error from errCh, exiting gracefully")
+		return err
 	}
+
+	return nil
 }

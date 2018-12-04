@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/shelmangroup/monohub/server"
+	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -40,10 +41,11 @@ func main() {
 
 	log.Info("Here we go!")
 
-	server.NewGitServer()
-	// err := srv.Serve()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	storage := storage.NewStorage()
+	srv := server.NewServer(storage)
+	err := srv.Serve()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
