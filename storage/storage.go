@@ -10,8 +10,8 @@ import (
 )
 
 type Storage struct {
-	Root     string
-	RepoPath string
+	Root string
+	Repo *GitRepository
 }
 
 var (
@@ -22,12 +22,11 @@ func NewStorage() *Storage {
 	log.WithField("data-dir", *dataDir).Info("Initializing storage")
 	r := ensureDirectory(*dataDir)
 
-	repo := path.Join(r, "repo")
-
 	storage := &Storage{
-		Root:     r,
-		RepoPath: repo,
+		Root: r,
 	}
+
+	storage.Repo = NewGitRepository(path.Join(r, "repo"))
 
 	return storage
 }

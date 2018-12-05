@@ -34,7 +34,7 @@ func NewGitHandler(storage *storage.Storage) *GitHandler {
 func (h *GitHandler) HandleRequest(w http.ResponseWriter, r *http.Request) {
 
 	env := []string{
-		"GIT_PROJECT_ROOT=" + h.storage.RepoPath,
+		"GIT_PROJECT_ROOT=" + h.storage.Repo.Path,
 		"GIT_HTTP_EXPORT_ALL=1",
 		"GIT_TRACE=2",
 		"REMOTE_USER=dln",
