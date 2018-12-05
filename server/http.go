@@ -56,8 +56,8 @@ func (s *HttpServer) getInfoRefsHandler(w http.ResponseWriter, req *http.Request
 	s.setNoCacheHeaders(w)
 
 	service := getServiceType(req)
-	cmd := exec.Command("git", service, "--stateless-rpc", "--advertise-refs", s.storage.RepoPath)
-	cmd.Dir = s.storage.RepoPath
+	cmd := exec.Command("git", service, "--stateless-rpc", "--advertise-refs", s.storage.Repo.Path)
+	cmd.Dir = s.storage.Repo.Path
 
 	refs, err := cmd.Output()
 	if err != nil {
@@ -101,14 +101,14 @@ func (s *HttpServer) serviceRPC(service string, w http.ResponseWriter, req *http
 	}
 
 	var stderr bytes.Buffer
-	cmd := exec.Command("git", service, "--stateless-rpc", s.storage.RepoPath)
-	cmd.Dir = s.storage.RepoPath
+	cmd := exec.Command("git", service, "--stateless-rpc", s.storage.Repo.Path)
+	cmd.Dir = s.storage.Repo.Path
 
 	cmd.Stdout = w
 	cmd.Stdin = reqBody
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
-		log.Errorf("fail to serve RPC(%s): %v - %s", service, err, stderr)
+		log.Errorf("fail to serve RPC(%s): %v - %s", service, err, stderr.String())
 		return
 	}
 	return
