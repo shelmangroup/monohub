@@ -24,9 +24,16 @@ type Server struct {
 }
 
 var (
-	listenAddress = kingpin.Flag("listen-address", "HTTP address").Default(":8822").String()
-	traceUrl      = kingpin.Flag("trace-url", "Jaeger Trace URL.").Default("http://localhost:14268").String()
+	command = kingpin.Command("server", "Server")
+	dataDir = command.Flag("data-directory", "Data directory").Short('d').Required().String()
+
+	listenAddress = command.Flag("listen-address", "HTTP address").Default(":8822").String()
+	traceUrl      = command.Flag("trace-url", "Jaeger Trace URL.").Default("http://localhost:14268").String()
 )
+
+func FullCommand() string {
+	return command.FullCommand()
+}
 
 func NewServer(storage *storage.Storage) *Server {
 
@@ -90,4 +97,13 @@ func (s *Server) Serve() error {
 	}
 
 	return nil
+}
+
+func RunServer() {
+	storage := storage.NewStorage(*dataDir)
+	srv := NewServer(storage)
+	err := srv.Serve()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

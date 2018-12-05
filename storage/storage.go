@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type Storage struct {
@@ -14,13 +13,9 @@ type Storage struct {
 	Repo *GitRepository
 }
 
-var (
-	dataDir = kingpin.Flag("data-directory", "Data directory").Short('d').Required().String()
-)
-
-func NewStorage() *Storage {
-	log.WithField("data-dir", *dataDir).Info("Initializing storage")
-	r := ensureDirectory(*dataDir)
+func NewStorage(dir string) *Storage {
+	log.WithField("data-dir", dir).Info("Initializing storage")
+	r := ensureDirectory(dir)
 
 	storage := &Storage{
 		Root: r,
