@@ -27,6 +27,10 @@ func NewStorage() *Storage {
 	}
 
 	storage.Repo = NewGitRepository(path.Join(r, "repo"))
+	err := storage.Repo.Init()
+	if err != nil {
+		log.WithError(err).Fatal("Error initializing git repo")
+	}
 
 	return storage
 }

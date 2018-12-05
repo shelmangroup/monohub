@@ -23,4 +23,10 @@ func TestInitialize(t *testing.T) {
 
 	r := NewGitRepository(dir)
 	assert.Equal(t, r.Path, dir)
+
+	err = r.Init()
+	assert.Nil(t, err, "A new git repository should be created on init if none exists")
+
+	err = r.Init()
+	assert.Nil(t, err, "Initializing an existing repo should be a noop")
 }
