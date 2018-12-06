@@ -56,9 +56,10 @@ func RunHookPreReceive() error {
 			if EmptySHA != oldCommitID {
 				cmd := exec.Command("git", "rev-list", "--max-count=1", oldCommitID, "^"+newCommitID)
 				cmd.Dir = *repoPath
-				output, err := cmd.Output()
+				_, err := cmd.Output()
 				if err != nil {
 					fail("Internal error", "Fail to detect force push: %v", err)
+					return err
 				}
 				fail(fmt.Sprintf("branch %s is protected from force push", branchName), "")
 			}
