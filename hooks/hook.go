@@ -59,9 +59,8 @@ func RunHookPreReceive() error {
 				output, err := cmd.Output()
 				if err != nil {
 					fail("Internal error", "Fail to detect force push: %v", err)
-				} else if len(output) > 0 {
-					fail(fmt.Sprintf("branch %s is protected from force push", branchName), "")
 				}
+				fail(fmt.Sprintf("branch %s is protected from force push", branchName), "")
 			}
 			// check and deletion
 			if newCommitID == EmptySHA {
