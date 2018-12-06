@@ -24,9 +24,10 @@ func TestRunPreRecevie(t *testing.T) {
 		expected string
 	}{
 		{"should pass", []byte("0000000000000000000000000000000000000000 4ea06c7022cc6ad23d2a62361a1935f49f123456 refs/heads/master"), ""},
-		{"prevent force push", []byte("4ea06c7022cc6ad23d2a62361a1935f49f5168b3 4ea06c7022cc6ad23d2a62361a1935f49f123456 refs/heads/master"), "exit status 128"},
 		{"allow force push not master", []byte("4ea06c7022cc6ad23d2a62361a1935f49f5168b3 4ea06c7022cc6ad23d2a62361a1935f49f123456 refs/heads/foobar"), ""},
+		{"prevent force push", []byte("4ea06c7022cc6ad23d2a62361a1935f49f5168b3 4ea06c7022cc6ad23d2a62361a1935f49f123456 refs/heads/master"), "exit status 128"},
 	}
+
 	teardownTestCase := setupTestCase(t)
 	defer teardownTestCase(t)
 
@@ -45,8 +46,9 @@ func TestRunPreRecevie(t *testing.T) {
 			if _, err := tmpfile.Seek(0, 0); err != nil {
 				log.Fatal(err)
 			}
-
 			os.Stdin = tmpfile
+
+			// Run actual test
 			if err := RunHookPreReceive(); err != nil {
 				if err.Error() != tc.expected {
 					t.Errorf("RunHookPreReceive failed: %v", err)
