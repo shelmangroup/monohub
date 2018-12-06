@@ -43,13 +43,11 @@ func main() {
 	case server.FullCommand():
 		server.RunServer()
 	case hooks.PreFullCommand():
-		err = hooks.RunHookPreReceive()
-		if err != nil {
+		if err := hooks.RunHookPreReceive(); err != nil {
 			os.Exit(1)
 		}
 	case hooks.PostFullCommand():
-		err = hooks.RunHookPostReceive()
-		if err != nil {
+		if err := hooks.RunHookPostReceive(); err != nil {
 			os.Exit(1)
 		}
 	}
