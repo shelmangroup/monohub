@@ -26,6 +26,7 @@ func TestRunPreRecevie(t *testing.T) {
 		{"should pass", []byte("0000000000000000000000000000000000000000 4ea06c7022cc6ad23d2a62361a1935f49f123456 refs/heads/master"), ""},
 		{"allow force push not master", []byte("4ea06c7022cc6ad23d2a62361a1935f49f5168b3 4ea06c7022cc6ad23d2a62361a1935f49f123456 refs/heads/foobar"), ""},
 		{"prevent force push", []byte("4ea06c7022cc6ad23d2a62361a1935f49f5168b3 4ea06c7022cc6ad23d2a62361a1935f49f123456 refs/heads/master"), "exit status 128"},
+		{"prevent delete master", []byte("0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 refs/heads/master"), "branch is protected"},
 	}
 
 	teardownTestCase := setupTestCase(t)

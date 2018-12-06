@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"strings"
 
 	"github.com/shelmangroup/monohub/hooks"
@@ -42,8 +43,14 @@ func main() {
 	case server.FullCommand():
 		server.RunServer()
 	case hooks.PreFullCommand():
-		hooks.RunHookPreReceive()
+		err = hooks.RunHookPreReceive()
+		if err != nil {
+			os.Exit(1)
+		}
 	case hooks.PostFullCommand():
-		hooks.RunHookPostReceive()
+		err = hooks.RunHookPostReceive()
+		if err != nil {
+			os.Exit(1)
+		}
 	}
 }

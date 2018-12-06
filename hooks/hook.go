@@ -62,10 +62,12 @@ func RunHookPreReceive() error {
 					return err
 				}
 				fail(fmt.Sprintf("branch %s is protected from force push", branchName), "")
+				return fmt.Errorf("branch is protected")
 			}
 			// check and deletion
 			if newCommitID == EmptySHA {
 				fail(fmt.Sprintf("branch %s is protected from deletion", branchName), "")
+				return fmt.Errorf("branch is protected")
 			}
 		}
 	}
@@ -81,7 +83,6 @@ func fail(userMessage, logMessage string, args ...interface{}) {
 
 	if len(logMessage) > 0 {
 		fmt.Fprintf(os.Stderr, logMessage+"\n", args...)
-		return
 	}
-	os.Exit(1)
+	return
 }
