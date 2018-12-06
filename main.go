@@ -1,9 +1,9 @@
 package main
 
 import (
-	// "os"
 	"strings"
 
+	"github.com/shelmangroup/monohub/hooks"
 	"github.com/shelmangroup/monohub/server"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -41,5 +41,9 @@ func main() {
 	switch kingpin.Parse() {
 	case server.FullCommand():
 		server.RunServer()
+	case hooks.PreFullCommand():
+		hooks.RunHookPreReceive()
+	case hooks.PostFullCommand():
+		hooks.RunHookPostReceive()
 	}
 }
