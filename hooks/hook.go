@@ -51,7 +51,14 @@ func RunHookPreReceive() error {
 
 		branchName := strings.TrimPrefix(refFullName, BranchPrefix)
 
+		fmt.Printf("branch: %s  oldCommit: %s  newCommit %s   refFullName %s\n", branchName, oldCommitID, newCommitID, refFullName)
+
 		if branchName == "master" {
+			// check and deletion
+			if newCommitID == EmptySHA {
+				fail(fmt.Sprintf("branch %s is protected from deletion", branchName), "")
+				return fmt.Errorf("branch is protected")
+			}
 			// detect force push
 			if EmptySHA != oldCommitID {
 				cmd := exec.Command("git", "rev-list", "--max-count=1", oldCommitID, "^"+newCommitID)
@@ -62,11 +69,6 @@ func RunHookPreReceive() error {
 					return err
 				}
 				fail(fmt.Sprintf("branch %s is protected from force push", branchName), "")
-				return fmt.Errorf("branch is protected")
-			}
-			// check and deletion
-			if newCommitID == EmptySHA {
-				fail(fmt.Sprintf("branch %s is protected from deletion", branchName), "")
 				return fmt.Errorf("branch is protected")
 			}
 		}
