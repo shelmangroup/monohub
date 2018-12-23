@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package monohub;
+
+service Monohub {
+  rpc Ping(PingRequest) returns (PingReply) {}
+}
+
+message PingRequest {}
+
+message PingReply {
+  string version = 1;
+}
