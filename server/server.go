@@ -17,6 +17,7 @@ import (
 	"go.opencensus.io/trace"
 	"go.opencensus.io/zpages"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -98,6 +99,7 @@ func (s *Server) Serve() error {
 		}
 		gs := grpc.NewServer()
 		api.RegisterMonohubServer(gs, s)
+		reflection.Register(gs)
 		err = gs.Serve(listen)
 		if err != nil {
 			errCh <- err
