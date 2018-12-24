@@ -31,7 +31,7 @@ var (
 	command = kingpin.Command("server", "Server")
 	dataDir = command.Flag("data-directory", "Data directory").Short('d').Required().String()
 
-	grpcAddress   = command.Flag("gprc-address", "GRPC address").Default(":8823").String()
+	grpcAddress   = command.Flag("grpc-address", "GRPC address").Default(":8823").String()
 	listenAddress = command.Flag("listen-address", "HTTP address").Default(":8822").String()
 	traceUrl      = command.Flag("trace-url", "Jaeger Trace URL.").Default("http://localhost:14268").String()
 )
@@ -84,7 +84,7 @@ func (s *Server) Serve() error {
 	}()
 
 	go func() {
-		h := NewHttpServer(s.storage)
+		h := NewHttpServer(s)
 		if err := h.Run(); err != nil {
 			errCh <- err
 		}

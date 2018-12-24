@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"compress/gzip"
+	"context"
 	"fmt"
 	"net/http"
 	"os/exec"
@@ -10,20 +11,25 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	api "github.com/shelmangroup/monohub/api"
 	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/stats/view"
+	"google.golang.org/grpc"
 )
 
 type HttpServer struct {
 	storage *storage.Storage
+	server  *Server
 }
 
-func NewHttpServer(storage *storage.Storage) *HttpServer {
+func NewHttpServer(server *Server) *HttpServer {
 	return &HttpServer{
-		storage: storage,
+		server:  server,
+		storage: server.storage,
 	}
 }
 
@@ -31,10 +37,21 @@ func (s *HttpServer) Run() error {
 	if err := view.Register(ochttp.DefaultServerViews...); err != nil {
 		return err
 	}
+
+	gwmux := runtime.NewServeMux()
+	ctx := context.Background()
+	dopts := []grpc.DialOption{grpc.WithInsecure()}
+	err := api.RegisterMonohubHandlerFromEndpoint(ctx, gwmux, *grpcAddress, dopts)
+	if err != nil {
+		log.WithError(err).Error("grpc gateway register failed")
+		return err
+	}
+
 	router := mux.NewRouter()
 	router.HandleFunc("/info/refs", s.getInfoRefsHandler).Queries("service", "{service}").Methods("GET")
 	router.HandleFunc("/git-upload-pack", s.uploadPackHandler).Methods("POST")
 	router.HandleFunc("/git-receive-pack", s.receivePackHandler).Methods("POST")
+	router.PathPrefix("/").Handler(gwmux)
 
 	log.WithField("address", *listenAddress).Info("Starting HTTP server")
 	return http.ListenAndServe(*listenAddress,

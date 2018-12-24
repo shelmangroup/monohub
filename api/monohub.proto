@@ -2,8 +2,14 @@ syntax = "proto3";
 
 package monohub;
 
+import "google/api/annotations.proto";
+
 service Monohub {
-  rpc Ping(PingRequest) returns (PingReply) {}
+  rpc Ping(PingRequest) returns (PingReply) {
+    option (google.api.http) = {
+      get: "/v1/ping"
+    };
+  }
 }
 
 message PingRequest {}
