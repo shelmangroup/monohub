@@ -28,7 +28,7 @@ var _ status.Status
 var _ = runtime.String
 var _ = utilities.NewDoubleArray
 
-func request_Monohub_Ping_0(ctx context.Context, marshaler runtime.Marshaler, client MonohubClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MonoHub_Ping_0(ctx context.Context, marshaler runtime.Marshaler, client MonoHubClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq PingRequest
 	var metadata runtime.ServerMetadata
 
@@ -37,9 +37,9 @@ func request_Monohub_Ping_0(ctx context.Context, marshaler runtime.Marshaler, cl
 
 }
 
-// RegisterMonohubHandlerFromEndpoint is same as RegisterMonohubHandler but
+// RegisterMonoHubHandlerFromEndpoint is same as RegisterMonoHubHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMonohubHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterMonoHubHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -59,23 +59,23 @@ func RegisterMonohubHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeM
 		}()
 	}()
 
-	return RegisterMonohubHandler(ctx, mux, conn)
+	return RegisterMonoHubHandler(ctx, mux, conn)
 }
 
-// RegisterMonohubHandler registers the http handlers for service Monohub to "mux".
+// RegisterMonoHubHandler registers the http handlers for service MonoHub to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMonohubHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMonohubHandlerClient(ctx, mux, NewMonohubClient(conn))
+func RegisterMonoHubHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterMonoHubHandlerClient(ctx, mux, NewMonoHubClient(conn))
 }
 
-// RegisterMonohubHandlerClient registers the http handlers for service Monohub
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MonohubClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MonohubClient"
+// RegisterMonoHubHandlerClient registers the http handlers for service MonoHub
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MonoHubClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MonoHubClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MonohubClient" to call the correct interceptors.
-func RegisterMonohubHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MonohubClient) error {
+// "MonoHubClient" to call the correct interceptors.
+func RegisterMonoHubHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MonoHubClient) error {
 
-	mux.Handle("GET", pattern_Monohub_Ping_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_MonoHub_Ping_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		if cn, ok := w.(http.CloseNotifier); ok {
@@ -93,14 +93,14 @@ func RegisterMonohubHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Monohub_Ping_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MonoHub_Ping_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Monohub_Ping_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MonoHub_Ping_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -108,9 +108,9 @@ func RegisterMonohubHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 }
 
 var (
-	pattern_Monohub_Ping_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "ping"}, ""))
+	pattern_MonoHub_Ping_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "ping"}, ""))
 )
 
 var (
-	forward_Monohub_Ping_0 = runtime.ForwardResponseMessage
+	forward_MonoHub_Ping_0 = runtime.ForwardResponseMessage
 )

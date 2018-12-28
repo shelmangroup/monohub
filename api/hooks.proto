@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package monohub;
+
+import "google/api/annotations.proto";
+
+service GitHooks {
+  rpc PreReceive(PreReceiveRequest) returns (PreReceiveReply) {
+  }
+}
+
+message PreReceiveRequest {}
+
+message PreReceiveReply {}

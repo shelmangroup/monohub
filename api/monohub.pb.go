@@ -34,7 +34,7 @@ func (m *PingRequest) Reset()         { *m = PingRequest{} }
 func (m *PingRequest) String() string { return proto.CompactTextString(m) }
 func (*PingRequest) ProtoMessage()    {}
 func (*PingRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_monohub_9e6214d81d0d2c8f, []int{0}
+	return fileDescriptor_monohub_95b64cfede7e9285, []int{0}
 }
 func (m *PingRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_PingRequest.Unmarshal(m, b)
@@ -65,7 +65,7 @@ func (m *PingReply) Reset()         { *m = PingReply{} }
 func (m *PingReply) String() string { return proto.CompactTextString(m) }
 func (*PingReply) ProtoMessage()    {}
 func (*PingReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_monohub_9e6214d81d0d2c8f, []int{1}
+	return fileDescriptor_monohub_95b64cfede7e9285, []int{1}
 }
 func (m *PingReply) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_PingReply.Unmarshal(m, b)
@@ -105,83 +105,83 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// MonohubClient is the client API for Monohub service.
+// MonoHubClient is the client API for MonoHub service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type MonohubClient interface {
+type MonoHubClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingReply, error)
 }
 
-type monohubClient struct {
+type monoHubClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewMonohubClient(cc *grpc.ClientConn) MonohubClient {
-	return &monohubClient{cc}
+func NewMonoHubClient(cc *grpc.ClientConn) MonoHubClient {
+	return &monoHubClient{cc}
 }
 
-func (c *monohubClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingReply, error) {
+func (c *monoHubClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingReply, error) {
 	out := new(PingReply)
-	err := c.cc.Invoke(ctx, "/monohub.Monohub/Ping", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/monohub.MonoHub/Ping", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MonohubServer is the server API for Monohub service.
-type MonohubServer interface {
+// MonoHubServer is the server API for MonoHub service.
+type MonoHubServer interface {
 	Ping(context.Context, *PingRequest) (*PingReply, error)
 }
 
-func RegisterMonohubServer(s *grpc.Server, srv MonohubServer) {
-	s.RegisterService(&_Monohub_serviceDesc, srv)
+func RegisterMonoHubServer(s *grpc.Server, srv MonoHubServer) {
+	s.RegisterService(&_MonoHub_serviceDesc, srv)
 }
 
-func _Monohub_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MonoHub_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MonohubServer).Ping(ctx, in)
+		return srv.(MonoHubServer).Ping(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/monohub.Monohub/Ping",
+		FullMethod: "/monohub.MonoHub/Ping",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MonohubServer).Ping(ctx, req.(*PingRequest))
+		return srv.(MonoHubServer).Ping(ctx, req.(*PingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _Monohub_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "monohub.Monohub",
-	HandlerType: (*MonohubServer)(nil),
+var _MonoHub_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "monohub.MonoHub",
+	HandlerType: (*MonoHubServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Ping",
-			Handler:    _Monohub_Ping_Handler,
+			Handler:    _MonoHub_Ping_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "monohub.proto",
 }
 
-func init() { proto.RegisterFile("monohub.proto", fileDescriptor_monohub_9e6214d81d0d2c8f) }
+func init() { proto.RegisterFile("monohub.proto", fileDescriptor_monohub_95b64cfede7e9285) }
 
-var fileDescriptor_monohub_9e6214d81d0d2c8f = []byte{
-	// 163 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_monohub_95b64cfede7e9285 = []byte{
+	// 167 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xcd, 0xcd, 0xcf, 0xcb,
 	0xcf, 0x28, 0x4d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x87, 0x72, 0xa5, 0x64, 0xd2,
 	0xf3, 0xf3, 0xd3, 0x73, 0x52, 0xf5, 0x13, 0x0b, 0x32, 0xf5, 0x13, 0xf3, 0xf2, 0xf2, 0x4b, 0x12,
 	0x4b, 0x32, 0xf3, 0xf3, 0x8a, 0x21, 0xca, 0x94, 0x78, 0xb9, 0xb8, 0x03, 0x32, 0xf3, 0xd2, 0x83,
 	0x52, 0x0b, 0x4b, 0x53, 0x8b, 0x4b, 0x94, 0x54, 0xb9, 0x38, 0x21, 0xdc, 0x82, 0x9c, 0x4a, 0x21,
 	0x09, 0x2e, 0xf6, 0xb2, 0xd4, 0xa2, 0xe2, 0xcc, 0xfc, 0x3c, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xce,
-	0x20, 0x18, 0xd7, 0xc8, 0x97, 0x8b, 0xdd, 0x17, 0x62, 0xbc, 0x90, 0x13, 0x17, 0x0b, 0x48, 0x87,
-	0x90, 0x88, 0x1e, 0xcc, 0x7e, 0x24, 0xf3, 0xa4, 0x84, 0xd0, 0x44, 0x0b, 0x72, 0x2a, 0x95, 0x04,
-	0x9a, 0x2e, 0x3f, 0x99, 0xcc, 0xc4, 0x25, 0xc4, 0xa1, 0x5f, 0x66, 0xa8, 0x5f, 0x90, 0x99, 0x97,
-	0x9e, 0xc4, 0x06, 0x76, 0x8b, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0xe2, 0xff, 0xf3, 0x2f, 0xc3,
-	0x00, 0x00, 0x00,
+	0x20, 0x18, 0xd7, 0xc8, 0x97, 0x8b, 0xdd, 0x37, 0x3f, 0x2f, 0xdf, 0xa3, 0x34, 0x49, 0xc8, 0x89,
+	0x8b, 0x05, 0xa4, 0x43, 0x48, 0x44, 0x0f, 0x66, 0x3f, 0x92, 0x79, 0x52, 0x42, 0x68, 0xa2, 0x05,
+	0x39, 0x95, 0x4a, 0x02, 0x4d, 0x97, 0x9f, 0x4c, 0x66, 0xe2, 0x12, 0xe2, 0xd0, 0x2f, 0x33, 0xd4,
+	0x2f, 0xc8, 0xcc, 0x4b, 0x4f, 0x62, 0x03, 0xbb, 0xc5, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0xce,
+	0x3e, 0x91, 0xe6, 0xc3, 0x00, 0x00, 0x00,
 }

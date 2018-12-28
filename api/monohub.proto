@@ -4,7 +4,7 @@ package monohub;
 
 import "google/api/annotations.proto";
 
-service Monohub {
+service MonoHub {
   rpc Ping(PingRequest) returns (PingReply) {
     option (google.api.http) = {
       get: "/v1/ping"

@@ -98,9 +98,16 @@ func (s *Server) Serve() error {
 			return
 		}
 		gs := grpc.NewServer()
-		api.RegisterMonohubServer(gs, s)
+		api.RegisterMonoHubServer(gs, s)
 		reflection.Register(gs)
 		err = gs.Serve(listen)
+		if err != nil {
+			errCh <- err
+		}
+	}()
+
+	go func() {
+		err = s.RunHooksServer()
 		if err != nil {
 			errCh <- err
 		}

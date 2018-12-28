@@ -41,7 +41,7 @@ func (s *HttpServer) Run() error {
 	gwmux := runtime.NewServeMux()
 	ctx := context.Background()
 	dopts := []grpc.DialOption{grpc.WithInsecure()}
-	err := api.RegisterMonohubHandlerFromEndpoint(ctx, gwmux, *grpcAddress, dopts)
+	err := api.RegisterMonoHubHandlerFromEndpoint(ctx, gwmux, *grpcAddress, dopts)
 	if err != nil {
 		log.WithError(err).Error("grpc gateway register failed")
 		return err
