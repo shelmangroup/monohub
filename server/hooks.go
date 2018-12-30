@@ -4,7 +4,6 @@ import (
 	"context"
 	"net"
 	"os"
-	"path"
 
 	api "github.com/shelmangroup/monohub/api"
 	log "github.com/sirupsen/logrus"
@@ -12,13 +11,8 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func (s *Server) hooksSocketPath() string {
-	p := path.Join(s.storage.Root, "hooks_rpc.sock")
-	return p
-}
-
 func (s *Server) RunHooksServer() error {
-	sock := s.hooksSocketPath()
+	sock := s.storage.HooksSocketPath()
 	log.WithField("socket", sock).Info("Starting git hooks grpc server")
 
 	err := os.Remove(sock)

@@ -26,6 +26,10 @@ func NewStorage(dir string) *Storage {
 	if err != nil {
 		log.WithError(err).Fatal("Error initializing git repo")
 	}
+	err = storage.Repo.SetupHooks(storage.HooksSocketPath())
+	if err != nil {
+		log.WithError(err).Fatal("Error setting up git hooks")
+	}
 
 	return storage
 }
@@ -47,4 +51,8 @@ func ensureDirectory(path string) string {
 	}
 
 	return p
+}
+
+func (s *Storage) HooksSocketPath() string {
+	return path.Join(s.Root, "hooks_rpc.sock")
 }

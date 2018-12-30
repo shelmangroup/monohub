@@ -3,12 +3,16 @@ package hooks
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"fmt"
+	"net"
 	"os"
-	"os/exec"
 	"strings"
+	"time"
 
-	// log "github.com/sirupsen/logrus"
+	api "github.com/shelmangroup/monohub/api"
+	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -20,10 +24,23 @@ const (
 var (
 	command = kingpin.Command("hook", "Hook")
 
-	pre      = command.Command("pre-receive", "pre receive hook")
-	post     = command.Command("post-receive", "post receive hook.")
-	repoPath = command.Flag("repo-path", "repo directory").Short('d').Required().String()
+	pre        = command.Command("pre-receive", "pre receive hook")
+	post       = command.Command("post-receive", "post receive hook.")
+	grpcSocket = command.Flag("grpc-socket", "grpc hook server endpoint").Short('g').Required().String()
 )
+
+func grpcClient() api.GitHooksClient {
+	conn, err := grpc.Dial(
+		*grpcSocket,
+		grpc.WithInsecure(),
+		grpc.WithDialer(func(addr string, timeout time.Duration) (net.Conn, error) {
+			return net.DialTimeout("unix", addr, timeout)
+		}))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	return api.NewGitHooksClient(conn)
+}
 
 func PreFullCommand() string {
 	return pre.FullCommand()
@@ -51,28 +68,14 @@ func RunHookPreReceive() error {
 
 		branchName := strings.TrimPrefix(refFullName, BranchPrefix)
 
-		fmt.Printf("branch: %s  oldCommit: %s  newCommit %s   refFullName %s\n", branchName, oldCommitID, newCommitID, refFullName)
+		log.Debugf("branch: %s  oldCommit: %s  newCommit %s   refFullName %s\n", branchName, oldCommitID, newCommitID, refFullName)
 
-		if branchName == "master" {
-			// check and deletion
-			if newCommitID == EmptySHA {
-				fail(fmt.Sprintf("branch %s is protected from deletion", branchName), "")
-				return fmt.Errorf("branch is protected")
-			}
-			// detect force push
-			if EmptySHA != oldCommitID {
-				cmd := exec.Command("git", "rev-list", "--max-count=1", oldCommitID, "^"+newCommitID)
-				cmd.Dir = *repoPath
-				_, err := cmd.Output()
-				if err != nil {
-					fail("Internal error", "Fail to detect force push: %v", err)
-					return err
-				}
-				fail(fmt.Sprintf("branch %s is protected from force push", branchName), "")
-				return fmt.Errorf("branch is protected")
-			}
-		}
 	}
+
+	req := api.PreReceiveRequest{}
+
+	c := grpcClient()
+	c.PreReceive(context.Background(), &req)
 	return nil
 }
 
