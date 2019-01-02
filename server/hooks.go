@@ -31,8 +31,11 @@ func (s *Server) RunHooksServer() error {
 	return err
 }
 
-func (s *Server) PreReceive(ctx context.Context, req *api.PreReceiveRequest) (*api.PreReceiveReply, error) {
-	log.WithField("context", ctx).Debug("PreReceive called")
-	reply := &api.PreReceiveReply{}
+func (s *Server) PreReceive(ctx context.Context, req *api.PreReceiveRequest) (*api.HookResult, error) {
+	log.WithField("req", req).Debug("PreReceive called")
+	reply := &api.HookResult{
+		Status:  api.HookStatus_OK,
+		Message: "ok",
+	}
 	return reply, nil
 }

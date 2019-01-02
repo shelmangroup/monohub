@@ -53,6 +53,8 @@ func PostFullCommand() string {
 func RunHookPreReceive() error {
 	buf := bytes.NewBuffer(nil)
 	scanner := bufio.NewScanner(os.Stdin)
+	req := api.PreReceiveRequest{}
+
 	for scanner.Scan() {
 		buf.Write(scanner.Bytes())
 		buf.WriteByte('\n')
@@ -70,12 +72,28 @@ func RunHookPreReceive() error {
 
 		log.Debugf("branch: %s  oldCommit: %s  newCommit %s   refFullName %s\n", branchName, oldCommitID, newCommitID, refFullName)
 
+		op := api.ReceiveOperation{
+			OldValue: oldCommitID,
+			NewValue: newCommitID,
+			RefName:  refFullName,
+		}
+
+		req.Ops = append(req.Ops, &op)
+
 	}
 
-	req := api.PreReceiveRequest{}
-
 	c := grpcClient()
-	c.PreReceive(context.Background(), &req)
+	r, err := c.PreReceive(context.Background(), &req)
+	if err != nil {
+		log.WithError(err).Error("Error")
+		os.Exit(1)
+	}
+
+	fmt.Fprintln(os.Stderr, "Monohub:", r.Message)
+	if r.Status != api.HookStatus_OK {
+		os.Exit(1)
+	}
+	os.Exit(0)
 	return nil
 }
 

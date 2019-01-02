@@ -5,10 +5,26 @@ package monohub;
 import "google/api/annotations.proto";
 
 service GitHooks {
-  rpc PreReceive(PreReceiveRequest) returns (PreReceiveReply) {
+  rpc PreReceive(PreReceiveRequest) returns (HookResult) {
   }
 }
 
-message PreReceiveRequest {}
+enum HookStatus {
+  OK = 0;
+  ERROR = 1;
+}
 
-message PreReceiveReply {}
+message HookResult {
+  HookStatus status = 1;
+  string message = 2;
+}
+
+message ReceiveOperation {
+  string oldValue = 1;
+  string newValue = 2;
+  string refName = 3;
+}
+
+message PreReceiveRequest {
+  repeated ReceiveOperation ops = 1;
+}

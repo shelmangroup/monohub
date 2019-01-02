@@ -24,17 +24,141 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type PreReceiveRequest struct {
+type HookStatus int32
+
+const (
+	HookStatus_OK    HookStatus = 0
+	HookStatus_ERROR HookStatus = 1
+)
+
+var HookStatus_name = map[int32]string{
+	0: "OK",
+	1: "ERROR",
+}
+var HookStatus_value = map[string]int32{
+	"OK":    0,
+	"ERROR": 1,
+}
+
+func (x HookStatus) String() string {
+	return proto.EnumName(HookStatus_name, int32(x))
+}
+func (HookStatus) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hooks_732ca62297cb0538, []int{0}
+}
+
+type HookResult struct {
+	Status               HookStatus `protobuf:"varint,1,opt,name=status,proto3,enum=monohub.HookStatus" json:"status,omitempty"`
+	Message              string     `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *HookResult) Reset()         { *m = HookResult{} }
+func (m *HookResult) String() string { return proto.CompactTextString(m) }
+func (*HookResult) ProtoMessage()    {}
+func (*HookResult) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hooks_732ca62297cb0538, []int{0}
+}
+func (m *HookResult) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HookResult.Unmarshal(m, b)
+}
+func (m *HookResult) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HookResult.Marshal(b, m, deterministic)
+}
+func (dst *HookResult) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HookResult.Merge(dst, src)
+}
+func (m *HookResult) XXX_Size() int {
+	return xxx_messageInfo_HookResult.Size(m)
+}
+func (m *HookResult) XXX_DiscardUnknown() {
+	xxx_messageInfo_HookResult.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_HookResult proto.InternalMessageInfo
+
+func (m *HookResult) GetStatus() HookStatus {
+	if m != nil {
+		return m.Status
+	}
+	return HookStatus_OK
+}
+
+func (m *HookResult) GetMessage() string {
+	if m != nil {
+		return m.Message
+	}
+	return ""
+}
+
+type ReceiveOperation struct {
+	OldValue             string   `protobuf:"bytes,1,opt,name=oldValue,proto3" json:"oldValue,omitempty"`
+	NewValue             string   `protobuf:"bytes,2,opt,name=newValue,proto3" json:"newValue,omitempty"`
+	RefName              string   `protobuf:"bytes,3,opt,name=refName,proto3" json:"refName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReceiveOperation) Reset()         { *m = ReceiveOperation{} }
+func (m *ReceiveOperation) String() string { return proto.CompactTextString(m) }
+func (*ReceiveOperation) ProtoMessage()    {}
+func (*ReceiveOperation) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hooks_732ca62297cb0538, []int{1}
+}
+func (m *ReceiveOperation) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReceiveOperation.Unmarshal(m, b)
+}
+func (m *ReceiveOperation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReceiveOperation.Marshal(b, m, deterministic)
+}
+func (dst *ReceiveOperation) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReceiveOperation.Merge(dst, src)
+}
+func (m *ReceiveOperation) XXX_Size() int {
+	return xxx_messageInfo_ReceiveOperation.Size(m)
+}
+func (m *ReceiveOperation) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReceiveOperation.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReceiveOperation proto.InternalMessageInfo
+
+func (m *ReceiveOperation) GetOldValue() string {
+	if m != nil {
+		return m.OldValue
+	}
+	return ""
+}
+
+func (m *ReceiveOperation) GetNewValue() string {
+	if m != nil {
+		return m.NewValue
+	}
+	return ""
+}
+
+func (m *ReceiveOperation) GetRefName() string {
+	if m != nil {
+		return m.RefName
+	}
+	return ""
+}
+
+type PreReceiveRequest struct {
+	Ops                  []*ReceiveOperation `protobuf:"bytes,1,rep,name=ops,proto3" json:"ops,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
 func (m *PreReceiveRequest) Reset()         { *m = PreReceiveRequest{} }
 func (m *PreReceiveRequest) String() string { return proto.CompactTextString(m) }
 func (*PreReceiveRequest) ProtoMessage()    {}
 func (*PreReceiveRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_hooks_36b4850d00c84136, []int{0}
+	return fileDescriptor_hooks_732ca62297cb0538, []int{2}
 }
 func (m *PreReceiveRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_PreReceiveRequest.Unmarshal(m, b)
@@ -54,39 +178,18 @@ func (m *PreReceiveRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PreReceiveRequest proto.InternalMessageInfo
 
-type PreReceiveReply struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+func (m *PreReceiveRequest) GetOps() []*ReceiveOperation {
+	if m != nil {
+		return m.Ops
+	}
+	return nil
 }
-
-func (m *PreReceiveReply) Reset()         { *m = PreReceiveReply{} }
-func (m *PreReceiveReply) String() string { return proto.CompactTextString(m) }
-func (*PreReceiveReply) ProtoMessage()    {}
-func (*PreReceiveReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_hooks_36b4850d00c84136, []int{1}
-}
-func (m *PreReceiveReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PreReceiveReply.Unmarshal(m, b)
-}
-func (m *PreReceiveReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PreReceiveReply.Marshal(b, m, deterministic)
-}
-func (dst *PreReceiveReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PreReceiveReply.Merge(dst, src)
-}
-func (m *PreReceiveReply) XXX_Size() int {
-	return xxx_messageInfo_PreReceiveReply.Size(m)
-}
-func (m *PreReceiveReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_PreReceiveReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_PreReceiveReply proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*HookResult)(nil), "monohub.HookResult")
+	proto.RegisterType((*ReceiveOperation)(nil), "monohub.ReceiveOperation")
 	proto.RegisterType((*PreReceiveRequest)(nil), "monohub.PreReceiveRequest")
-	proto.RegisterType((*PreReceiveReply)(nil), "monohub.PreReceiveReply")
+	proto.RegisterEnum("monohub.HookStatus", HookStatus_name, HookStatus_value)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -101,7 +204,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type GitHooksClient interface {
-	PreReceive(ctx context.Context, in *PreReceiveRequest, opts ...grpc.CallOption) (*PreReceiveReply, error)
+	PreReceive(ctx context.Context, in *PreReceiveRequest, opts ...grpc.CallOption) (*HookResult, error)
 }
 
 type gitHooksClient struct {
@@ -112,8 +215,8 @@ func NewGitHooksClient(cc *grpc.ClientConn) GitHooksClient {
 	return &gitHooksClient{cc}
 }
 
-func (c *gitHooksClient) PreReceive(ctx context.Context, in *PreReceiveRequest, opts ...grpc.CallOption) (*PreReceiveReply, error) {
-	out := new(PreReceiveReply)
+func (c *gitHooksClient) PreReceive(ctx context.Context, in *PreReceiveRequest, opts ...grpc.CallOption) (*HookResult, error) {
+	out := new(HookResult)
 	err := c.cc.Invoke(ctx, "/monohub.GitHooks/PreReceive", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -123,7 +226,7 @@ func (c *gitHooksClient) PreReceive(ctx context.Context, in *PreReceiveRequest, 
 
 // GitHooksServer is the server API for GitHooks service.
 type GitHooksServer interface {
-	PreReceive(context.Context, *PreReceiveRequest) (*PreReceiveReply, error)
+	PreReceive(context.Context, *PreReceiveRequest) (*HookResult, error)
 }
 
 func RegisterGitHooksServer(s *grpc.Server, srv GitHooksServer) {
@@ -161,17 +264,26 @@ var _GitHooks_serviceDesc = grpc.ServiceDesc{
 	Metadata: "hooks.proto",
 }
 
-func init() { proto.RegisterFile("hooks.proto", fileDescriptor_hooks_36b4850d00c84136) }
+func init() { proto.RegisterFile("hooks.proto", fileDescriptor_hooks_732ca62297cb0538) }
 
-var fileDescriptor_hooks_36b4850d00c84136 = []byte{
-	// 140 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0xc8, 0xcf, 0xcf,
-	0x2e, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xcf, 0xcd, 0xcf, 0xcb, 0xcf, 0x28, 0x4d,
-	0x92, 0x92, 0x49, 0xcf, 0xcf, 0x4f, 0xcf, 0x49, 0xd5, 0x4f, 0x2c, 0xc8, 0xd4, 0x4f, 0xcc, 0xcb,
-	0xcb, 0x2f, 0x49, 0x2c, 0xc9, 0xcc, 0xcf, 0x83, 0x2a, 0x53, 0x12, 0xe6, 0x12, 0x0c, 0x28, 0x4a,
-	0x0d, 0x4a, 0x4d, 0x4e, 0xcd, 0x2c, 0x4b, 0x0d, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x51, 0x12,
-	0xe4, 0xe2, 0x47, 0x16, 0x2c, 0xc8, 0xa9, 0x34, 0x0a, 0xe0, 0xe2, 0x70, 0xcf, 0x2c, 0xf1, 0x00,
-	0x59, 0x20, 0xe4, 0xc2, 0xc5, 0x85, 0x90, 0x16, 0x92, 0xd2, 0x83, 0xda, 0xa4, 0x87, 0x61, 0x90,
-	0x94, 0x04, 0x56, 0xb9, 0x82, 0x9c, 0x4a, 0x25, 0x86, 0x24, 0x36, 0xb0, 0x03, 0x8c, 0x01, 0x01,
-	0x00, 0x00, 0xff, 0xff, 0x3d, 0x2b, 0xf0, 0x05, 0xb6, 0x00, 0x00, 0x00,
+var fileDescriptor_hooks_732ca62297cb0538 = []byte{
+	// 273 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x64, 0x50, 0x4d, 0x4b, 0xc3, 0x40,
+	0x14, 0x6c, 0x1a, 0x4c, 0x9b, 0x57, 0x90, 0xb8, 0x5e, 0x62, 0x10, 0x2c, 0x39, 0x05, 0x85, 0x14,
+	0xe2, 0x0f, 0xd0, 0x8b, 0x28, 0x14, 0x8c, 0x6c, 0xc1, 0xfb, 0xd6, 0x3e, 0xd3, 0xd0, 0x24, 0x2f,
+	0x66, 0x37, 0xfa, 0xf7, 0x65, 0xb3, 0x6b, 0x44, 0x7b, 0x1c, 0x66, 0x98, 0x2f, 0x58, 0xec, 0x89,
+	0x0e, 0x32, 0x6d, 0x3b, 0x52, 0xc4, 0x66, 0x35, 0x35, 0xb4, 0xef, 0xb7, 0xd1, 0x65, 0x41, 0x54,
+	0x54, 0xb8, 0x12, 0x6d, 0xb9, 0x12, 0x4d, 0x43, 0x4a, 0xa8, 0x92, 0x1a, 0x2b, 0x8b, 0x37, 0x00,
+	0x4f, 0x44, 0x07, 0x8e, 0xb2, 0xaf, 0x14, 0xbb, 0x01, 0x4f, 0x2a, 0xa1, 0x7a, 0x19, 0x3a, 0x4b,
+	0x27, 0x39, 0xcd, 0xce, 0x53, 0xeb, 0x92, 0x6a, 0xd1, 0x66, 0xa0, 0xb8, 0x95, 0xb0, 0x10, 0x66,
+	0x35, 0x4a, 0x29, 0x0a, 0x0c, 0xa7, 0x4b, 0x27, 0xf1, 0xf9, 0x0f, 0x8c, 0x77, 0x10, 0x70, 0x7c,
+	0xc3, 0xf2, 0x13, 0xf3, 0x16, 0xbb, 0x21, 0x8f, 0x45, 0x30, 0xa7, 0x6a, 0xf7, 0x2a, 0xaa, 0x1e,
+	0x07, 0x73, 0x9f, 0x8f, 0x58, 0x73, 0x0d, 0x7e, 0x19, 0xce, 0x58, 0x8d, 0x58, 0xa7, 0x74, 0xf8,
+	0xfe, 0x2c, 0x6a, 0x0c, 0x5d, 0x93, 0x62, 0x61, 0x7c, 0x0f, 0x67, 0x2f, 0x1d, 0xda, 0x20, 0x8e,
+	0x1f, 0x3d, 0x4a, 0xbd, 0xc0, 0xa5, 0x56, 0xd7, 0x77, 0x93, 0x45, 0x76, 0x31, 0xd6, 0xff, 0x5f,
+	0x87, 0x6b, 0xd5, 0xf5, 0x95, 0x19, 0x6f, 0x76, 0x31, 0x0f, 0xa6, 0xf9, 0x3a, 0x98, 0x30, 0x1f,
+	0x4e, 0x1e, 0x38, 0xcf, 0x79, 0xe0, 0x64, 0x6b, 0x98, 0x3f, 0x96, 0x4a, 0x6b, 0x24, 0xbb, 0x03,
+	0xf8, 0x8d, 0x63, 0xd1, 0x68, 0x7d, 0xd4, 0x21, 0xfa, 0xfb, 0x9a, 0xb9, 0x36, 0x9e, 0x6c, 0xbd,
+	0xe1, 0xf1, 0xdb, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0xa1, 0x1d, 0x97, 0xcd, 0xa7, 0x01, 0x00,
+	0x00,
 }
