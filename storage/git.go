@@ -56,3 +56,11 @@ func (r *GitRepository) Init() error {
 	}
 	return err
 }
+
+func (r *GitRepository) GetGitRepo() *git.Repository {
+	repo, err := git.PlainOpen(r.Path)
+	if err != nil {
+		log.WithError(err).Fatal("Error opening git repository")
+	}
+	return repo
+}
