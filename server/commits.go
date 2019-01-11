@@ -41,12 +41,12 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 		return nil, err
 	}
 
-	var files []*pb.File
 	stats, err := c.Stats()
 	if err != nil {
 		return nil, err
 	}
 
+	var files []*pb.File
 	for _, fs := range stats {
 		var p *object.Patch
 		var patch string
