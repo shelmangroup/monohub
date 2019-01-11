@@ -23,7 +23,7 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 		log.WithField("context", ctx).Errorf("Commit: %s not found", req.Sha)
 		return nil, err
 	}
-	prevCommit, err := c.Parent(0)
+	prevCommit, err := c.Parents().Next()
 	if err != nil {
 		return nil, err
 	}
@@ -49,19 +49,21 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 
 	for _, fs := range stats {
 		var p *object.Patch
+		var patch string
 		for _, c := range changes {
 			if c.To.Name == fs.Name {
 				p, err = c.Patch()
 				if err != nil {
 					return nil, err
 				}
+				patch = p.String()
 			}
 		}
 		file := &pb.File{
 			Filename:  fs.Name,
 			Additions: int64(fs.Addition),
 			Deletions: int64(fs.Deletion),
-			Patch:     p.String(),
+			Patch:     patch,
 		}
 		files = append(files, file)
 	}
