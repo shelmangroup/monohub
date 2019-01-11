@@ -50,9 +50,9 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 	for _, fs := range stats {
 		var p *object.Patch
 		var patch string
-		for _, c := range changes {
-			if c.To.Name == fs.Name {
-				p, err = c.Patch()
+		for _, ch := range changes {
+			if ch.To.Name == fs.Name {
+				p, err = ch.Patch()
 				if err != nil {
 					return nil, err
 				}
