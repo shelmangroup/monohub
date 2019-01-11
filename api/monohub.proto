@@ -14,7 +14,7 @@ service MonoHub {
   }
   rpc Commits(CommitRequest) returns (CommitResponse) {
     option (google.api.http) = {
-      get: "/v1/commits"
+      get: "/v1/commits/{sha}"
     };
   }
 }

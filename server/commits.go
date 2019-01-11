@@ -20,6 +20,7 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 
 	c, err := r.CommitObject(plumbing.NewHash(req.Sha))
 	if err != nil {
+		log.WithField("context", ctx).Errorf("Commit: %s not found", req.Sha)
 		return nil, err
 	}
 
