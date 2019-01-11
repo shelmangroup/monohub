@@ -62,14 +62,14 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 		Sha: c.Hash.String(),
 		Author: &pb.Author{
 			Id:    1,
-			Login: c.Author.Name,
+			Login: c.Author.Email,
 			Name:  c.Author.Name,
 			Email: c.Author.Email,
 		},
 		Commit: &pb.Commit{
 			Committer: &pb.Author{
 				Id:    1,
-				Login: c.Author.Name,
+				Login: c.Author.Email,
 				Name:  c.Author.Name,
 				Email: c.Author.Email,
 			},
