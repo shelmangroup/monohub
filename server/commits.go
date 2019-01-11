@@ -23,27 +23,47 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 		log.WithField("context", ctx).Errorf("Commit: %s not found", req.Sha)
 		return nil, err
 	}
-
-	tree, err := c.Tree()
+	prevCommit, err := c.Parent(0)
+	if err != nil {
+		return nil, err
+	}
+	prevTree, err := prevCommit.Tree()
+	if err != nil {
+		return nil, err
+	}
+	currentTree, err := c.Tree()
 	if err != nil {
 		return nil, err
 	}
 
-	tIter := tree.Files()
+	changes, err := currentTree.Diff(prevTree)
 	if err != nil {
 		return nil, err
 	}
 
 	var files []*pb.File
-	err = tIter.ForEach(func(f *object.File) error {
-		file := &pb.File{
-			Filename: f.Name,
-		}
-		files = append(files, file)
-		return nil
-	})
+	stats, err := c.Stats()
 	if err != nil {
 		return nil, err
+	}
+
+	for _, fs := range stats {
+		var p *object.Patch
+		for _, c := range changes {
+			if c.To.Name == fs.Name {
+				p, err = c.Patch()
+				if err != nil {
+					return nil, err
+				}
+			}
+		}
+		file := &pb.File{
+			Filename:  fs.Name,
+			Additions: int64(fs.Addition),
+			Deletions: int64(fs.Deletion),
+			Patch:     p.String(),
+		}
+		files = append(files, file)
 	}
 
 	pIter := c.Parents()
@@ -70,13 +90,13 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 		Commit: &pb.Commit{
 			Committer: &pb.Author{
 				Id:    1,
-				Login: c.Author.Email,
-				Name:  c.Author.Name,
-				Email: c.Author.Email,
+				Login: c.Committer.Email,
+				Name:  c.Committer.Name,
+				Email: c.Committer.Email,
 			},
 			Message: c.Message,
 			Tree: &pb.Tree{
-				Sha: tree.Hash.String(),
+				Sha: c.TreeHash.String(),
 			},
 		},
 		Files:   files,

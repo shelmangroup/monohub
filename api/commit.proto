@@ -39,7 +39,7 @@ message File {
     int64 deletions = 4;
     string status = 5;
     string blob_url = 6;
-    bytes patch = 7;
+    string patch = 7;
 }
 
 message CommitRequest {
