@@ -48,8 +48,8 @@ func (HookStatus) EnumDescriptor() ([]byte, []int) {
 }
 
 type HookResult struct {
-	Status               HookStatus `protobuf:"varint,1,opt,name=status,proto3,enum=monohub.HookStatus" json:"status,omitempty"`
-	Message              string     `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Status               HookStatus `protobuf:"varint,1,opt,name=status,enum=monohub.HookStatus" json:"status,omitempty"`
+	Message              string     `protobuf:"bytes,2,opt,name=message" json:"message,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
 	XXX_unrecognized     []byte     `json:"-"`
 	XXX_sizecache        int32      `json:"-"`
@@ -94,9 +94,9 @@ func (m *HookResult) GetMessage() string {
 }
 
 type ReceiveOperation struct {
-	OldValue             string   `protobuf:"bytes,1,opt,name=oldValue,proto3" json:"oldValue,omitempty"`
-	NewValue             string   `protobuf:"bytes,2,opt,name=newValue,proto3" json:"newValue,omitempty"`
-	RefName              string   `protobuf:"bytes,3,opt,name=refName,proto3" json:"refName,omitempty"`
+	OldValue             string   `protobuf:"bytes,1,opt,name=oldValue" json:"oldValue,omitempty"`
+	NewValue             string   `protobuf:"bytes,2,opt,name=newValue" json:"newValue,omitempty"`
+	RefName              string   `protobuf:"bytes,3,opt,name=refName" json:"refName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -148,7 +148,7 @@ func (m *ReceiveOperation) GetRefName() string {
 }
 
 type PreReceiveRequest struct {
-	Ops                  []*ReceiveOperation `protobuf:"bytes,1,rep,name=ops,proto3" json:"ops,omitempty"`
+	Ops                  []*ReceiveOperation `protobuf:"bytes,1,rep,name=ops" json:"ops,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
 	XXX_unrecognized     []byte              `json:"-"`
 	XXX_sizecache        int32               `json:"-"`

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package monohub;
+
+message Parent {
+    string url = 1;
+    string sha = 2;
+}
+
+message Stats {
+    int64 additions = 1;
+    int64 deletions = 2;
+    int64 total = 3;
+}
+
+message Author {
+    int64 id = 1;
+    string login = 2;
+    string name = 3;
+    string email = 4;
+}
+
+message Tree {
+    string url = 1;
+    string sha = 2;
+}
+
+message Commit {
+    string sha = 1;
+    string login = 2;
+    string message = 3;
+    Tree tree = 4;
+    Author author = 5;
+}
+
+message File {
+    string filename = 1;
+    int64 additions = 2;
+    int64 changes = 3;
+    int64 deletions = 4;
+    string status = 5;
+    string blob_url = 6;
+    bytes patch = 7;
+}
+
+message CommitRequest {
+    string sha = 1;
+}
+
+message CommitResponse {
+  string sha = 1;
+  Author author = 2;
+  repeated File files = 3;
+  Stats stats = 4;
+  repeated Parent parents = 5;
+}

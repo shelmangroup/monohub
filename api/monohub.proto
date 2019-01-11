@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package monohub;
 
+import "commit.proto";
+
 import "google/api/annotations.proto";
 
 service MonoHub {
@@ -21,42 +23,4 @@ message PingRequest {}
 
 message PingReply {
   string version = 1;
-}
-
-message Parent {
-    string url = 1;
-    string sha = 2;
-}
-
-message Stats {
-    int32 additions = 1;
-    int32 deletions = 2;
-    int32 total = 3;
-}
-
-message Author {
-    int64 id = 1;
-    string login = 2;
-}
-
-message File {
-    string filename = 1;
-    int32 additions = 2;
-    int32 changes = 3;
-    int32 deletions = 4;
-    string status = 5;
-    string blob_url = 6;
-    bytes patch = 7;
-}
-
-message CommitRequest {
-    string sha = 1;
-}
-
-message CommitResponse {
-  string sha = 1;
-  Author author = 2;
-  repeated File files = 3;
-  Stats stats = 4;
-  repeated Parent parents = 5;
 }
