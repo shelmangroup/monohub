@@ -26,8 +26,7 @@ message Tree {
 }
 
 message Commit {
-    string sha = 1;
-    string login = 2;
+    Author committer = 2;
     string message = 3;
     Tree tree = 4;
     Author author = 5;
@@ -53,4 +52,5 @@ message CommitResponse {
   repeated File files = 3;
   Stats stats = 4;
   repeated Parent parents = 5;
+  Commit commit = 6;
 }
