@@ -3,6 +3,7 @@ syntax = "proto3";
 package monohub;
 
 import "commit.proto";
+import "blob.proto";
 
 import "google/api/annotations.proto";
 
@@ -15,6 +16,11 @@ service MonoHub {
   rpc Commits(CommitRequest) returns (CommitResponse) {
     option (google.api.http) = {
       get: "/v1/commits/{sha}"
+    };
+  }
+  rpc Blobs(BlobRequest) returns (BlobResponse) {
+    option (google.api.http) = {
+      get: "/v1/blobs/{sha}"
     };
   }
 }

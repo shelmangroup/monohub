@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package monohub;
+
+message BlobRequest {
+    string sha = 1;
+}
+
+message BlobResponse {
+  string sha = 1;
+  string content = 2;
+  string encoding = 3;
+  string url = 4;
+  int64 size = 5;
+}

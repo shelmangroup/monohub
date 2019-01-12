@@ -3,9 +3,11 @@
 
 package monohub
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import (
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
+	math "math"
+)
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -19,8 +21,8 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type Parent struct {
-	Url                  string   `protobuf:"bytes,1,opt,name=url" json:"url,omitempty"`
-	Sha                  string   `protobuf:"bytes,2,opt,name=sha" json:"sha,omitempty"`
+	Url                  string   `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Sha                  string   `protobuf:"bytes,2,opt,name=sha,proto3" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -30,16 +32,17 @@ func (m *Parent) Reset()         { *m = Parent{} }
 func (m *Parent) String() string { return proto.CompactTextString(m) }
 func (*Parent) ProtoMessage()    {}
 func (*Parent) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{0}
+	return fileDescriptor_db7163399a465f48, []int{0}
 }
+
 func (m *Parent) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Parent.Unmarshal(m, b)
 }
 func (m *Parent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Parent.Marshal(b, m, deterministic)
 }
-func (dst *Parent) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Parent.Merge(dst, src)
+func (m *Parent) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Parent.Merge(m, src)
 }
 func (m *Parent) XXX_Size() int {
 	return xxx_messageInfo_Parent.Size(m)
@@ -65,9 +68,9 @@ func (m *Parent) GetSha() string {
 }
 
 type Stats struct {
-	Additions            int64    `protobuf:"varint,1,opt,name=additions" json:"additions,omitempty"`
-	Deletions            int64    `protobuf:"varint,2,opt,name=deletions" json:"deletions,omitempty"`
-	Total                int64    `protobuf:"varint,3,opt,name=total" json:"total,omitempty"`
+	Additions            int64    `protobuf:"varint,1,opt,name=additions,proto3" json:"additions,omitempty"`
+	Deletions            int64    `protobuf:"varint,2,opt,name=deletions,proto3" json:"deletions,omitempty"`
+	Total                int64    `protobuf:"varint,3,opt,name=total,proto3" json:"total,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -77,16 +80,17 @@ func (m *Stats) Reset()         { *m = Stats{} }
 func (m *Stats) String() string { return proto.CompactTextString(m) }
 func (*Stats) ProtoMessage()    {}
 func (*Stats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{1}
+	return fileDescriptor_db7163399a465f48, []int{1}
 }
+
 func (m *Stats) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Stats.Unmarshal(m, b)
 }
 func (m *Stats) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Stats.Marshal(b, m, deterministic)
 }
-func (dst *Stats) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Stats.Merge(dst, src)
+func (m *Stats) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Stats.Merge(m, src)
 }
 func (m *Stats) XXX_Size() int {
 	return xxx_messageInfo_Stats.Size(m)
@@ -119,10 +123,10 @@ func (m *Stats) GetTotal() int64 {
 }
 
 type Author struct {
-	Id                   int64    `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
-	Login                string   `protobuf:"bytes,2,opt,name=login" json:"login,omitempty"`
-	Name                 string   `protobuf:"bytes,3,opt,name=name" json:"name,omitempty"`
-	Email                string   `protobuf:"bytes,4,opt,name=email" json:"email,omitempty"`
+	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Login                string   `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty"`
+	Name                 string   `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Email                string   `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -132,16 +136,17 @@ func (m *Author) Reset()         { *m = Author{} }
 func (m *Author) String() string { return proto.CompactTextString(m) }
 func (*Author) ProtoMessage()    {}
 func (*Author) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{2}
+	return fileDescriptor_db7163399a465f48, []int{2}
 }
+
 func (m *Author) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Author.Unmarshal(m, b)
 }
 func (m *Author) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Author.Marshal(b, m, deterministic)
 }
-func (dst *Author) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Author.Merge(dst, src)
+func (m *Author) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Author.Merge(m, src)
 }
 func (m *Author) XXX_Size() int {
 	return xxx_messageInfo_Author.Size(m)
@@ -181,8 +186,8 @@ func (m *Author) GetEmail() string {
 }
 
 type Tree struct {
-	Url                  string   `protobuf:"bytes,1,opt,name=url" json:"url,omitempty"`
-	Sha                  string   `protobuf:"bytes,2,opt,name=sha" json:"sha,omitempty"`
+	Url                  string   `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Sha                  string   `protobuf:"bytes,2,opt,name=sha,proto3" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -192,16 +197,17 @@ func (m *Tree) Reset()         { *m = Tree{} }
 func (m *Tree) String() string { return proto.CompactTextString(m) }
 func (*Tree) ProtoMessage()    {}
 func (*Tree) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{3}
+	return fileDescriptor_db7163399a465f48, []int{3}
 }
+
 func (m *Tree) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Tree.Unmarshal(m, b)
 }
 func (m *Tree) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Tree.Marshal(b, m, deterministic)
 }
-func (dst *Tree) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Tree.Merge(dst, src)
+func (m *Tree) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Tree.Merge(m, src)
 }
 func (m *Tree) XXX_Size() int {
 	return xxx_messageInfo_Tree.Size(m)
@@ -227,10 +233,10 @@ func (m *Tree) GetSha() string {
 }
 
 type Commit struct {
-	Committer            *Author  `protobuf:"bytes,2,opt,name=committer" json:"committer,omitempty"`
-	Message              string   `protobuf:"bytes,3,opt,name=message" json:"message,omitempty"`
-	Tree                 *Tree    `protobuf:"bytes,4,opt,name=tree" json:"tree,omitempty"`
-	Author               *Author  `protobuf:"bytes,5,opt,name=author" json:"author,omitempty"`
+	Committer            *Author  `protobuf:"bytes,2,opt,name=committer,proto3" json:"committer,omitempty"`
+	Message              string   `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	Tree                 *Tree    `protobuf:"bytes,4,opt,name=tree,proto3" json:"tree,omitempty"`
+	Author               *Author  `protobuf:"bytes,5,opt,name=author,proto3" json:"author,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -240,16 +246,17 @@ func (m *Commit) Reset()         { *m = Commit{} }
 func (m *Commit) String() string { return proto.CompactTextString(m) }
 func (*Commit) ProtoMessage()    {}
 func (*Commit) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{4}
+	return fileDescriptor_db7163399a465f48, []int{4}
 }
+
 func (m *Commit) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Commit.Unmarshal(m, b)
 }
 func (m *Commit) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Commit.Marshal(b, m, deterministic)
 }
-func (dst *Commit) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Commit.Merge(dst, src)
+func (m *Commit) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Commit.Merge(m, src)
 }
 func (m *Commit) XXX_Size() int {
 	return xxx_messageInfo_Commit.Size(m)
@@ -289,13 +296,13 @@ func (m *Commit) GetAuthor() *Author {
 }
 
 type File struct {
-	Filename             string   `protobuf:"bytes,1,opt,name=filename" json:"filename,omitempty"`
-	Additions            int64    `protobuf:"varint,2,opt,name=additions" json:"additions,omitempty"`
-	Changes              int64    `protobuf:"varint,3,opt,name=changes" json:"changes,omitempty"`
-	Deletions            int64    `protobuf:"varint,4,opt,name=deletions" json:"deletions,omitempty"`
-	Status               string   `protobuf:"bytes,5,opt,name=status" json:"status,omitempty"`
-	BlobUrl              string   `protobuf:"bytes,6,opt,name=blob_url,json=blobUrl" json:"blob_url,omitempty"`
-	Patch                string   `protobuf:"bytes,7,opt,name=patch" json:"patch,omitempty"`
+	Filename             string   `protobuf:"bytes,1,opt,name=filename,proto3" json:"filename,omitempty"`
+	Additions            int64    `protobuf:"varint,2,opt,name=additions,proto3" json:"additions,omitempty"`
+	Changes              int64    `protobuf:"varint,3,opt,name=changes,proto3" json:"changes,omitempty"`
+	Deletions            int64    `protobuf:"varint,4,opt,name=deletions,proto3" json:"deletions,omitempty"`
+	Status               string   `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	BlobUrl              string   `protobuf:"bytes,6,opt,name=blob_url,json=blobUrl,proto3" json:"blob_url,omitempty"`
+	Patch                string   `protobuf:"bytes,7,opt,name=patch,proto3" json:"patch,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -305,16 +312,17 @@ func (m *File) Reset()         { *m = File{} }
 func (m *File) String() string { return proto.CompactTextString(m) }
 func (*File) ProtoMessage()    {}
 func (*File) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{5}
+	return fileDescriptor_db7163399a465f48, []int{5}
 }
+
 func (m *File) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_File.Unmarshal(m, b)
 }
 func (m *File) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_File.Marshal(b, m, deterministic)
 }
-func (dst *File) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_File.Merge(dst, src)
+func (m *File) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_File.Merge(m, src)
 }
 func (m *File) XXX_Size() int {
 	return xxx_messageInfo_File.Size(m)
@@ -375,7 +383,7 @@ func (m *File) GetPatch() string {
 }
 
 type CommitRequest struct {
-	Sha                  string   `protobuf:"bytes,1,opt,name=sha" json:"sha,omitempty"`
+	Sha                  string   `protobuf:"bytes,1,opt,name=sha,proto3" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -385,16 +393,17 @@ func (m *CommitRequest) Reset()         { *m = CommitRequest{} }
 func (m *CommitRequest) String() string { return proto.CompactTextString(m) }
 func (*CommitRequest) ProtoMessage()    {}
 func (*CommitRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{6}
+	return fileDescriptor_db7163399a465f48, []int{6}
 }
+
 func (m *CommitRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CommitRequest.Unmarshal(m, b)
 }
 func (m *CommitRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_CommitRequest.Marshal(b, m, deterministic)
 }
-func (dst *CommitRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CommitRequest.Merge(dst, src)
+func (m *CommitRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CommitRequest.Merge(m, src)
 }
 func (m *CommitRequest) XXX_Size() int {
 	return xxx_messageInfo_CommitRequest.Size(m)
@@ -413,12 +422,12 @@ func (m *CommitRequest) GetSha() string {
 }
 
 type CommitResponse struct {
-	Sha                  string    `protobuf:"bytes,1,opt,name=sha" json:"sha,omitempty"`
-	Author               *Author   `protobuf:"bytes,2,opt,name=author" json:"author,omitempty"`
-	Files                []*File   `protobuf:"bytes,3,rep,name=files" json:"files,omitempty"`
-	Stats                *Stats    `protobuf:"bytes,4,opt,name=stats" json:"stats,omitempty"`
-	Parents              []*Parent `protobuf:"bytes,5,rep,name=parents" json:"parents,omitempty"`
-	Commit               *Commit   `protobuf:"bytes,6,opt,name=commit" json:"commit,omitempty"`
+	Sha                  string    `protobuf:"bytes,1,opt,name=sha,proto3" json:"sha,omitempty"`
+	Author               *Author   `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
+	Files                []*File   `protobuf:"bytes,3,rep,name=files,proto3" json:"files,omitempty"`
+	Stats                *Stats    `protobuf:"bytes,4,opt,name=stats,proto3" json:"stats,omitempty"`
+	Parents              []*Parent `protobuf:"bytes,5,rep,name=parents,proto3" json:"parents,omitempty"`
+	Commit               *Commit   `protobuf:"bytes,6,opt,name=commit,proto3" json:"commit,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
 	XXX_unrecognized     []byte    `json:"-"`
 	XXX_sizecache        int32     `json:"-"`
@@ -428,16 +437,17 @@ func (m *CommitResponse) Reset()         { *m = CommitResponse{} }
 func (m *CommitResponse) String() string { return proto.CompactTextString(m) }
 func (*CommitResponse) ProtoMessage()    {}
 func (*CommitResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_commit_b0b64943c0218a98, []int{7}
+	return fileDescriptor_db7163399a465f48, []int{7}
 }
+
 func (m *CommitResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CommitResponse.Unmarshal(m, b)
 }
 func (m *CommitResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_CommitResponse.Marshal(b, m, deterministic)
 }
-func (dst *CommitResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CommitResponse.Merge(dst, src)
+func (m *CommitResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CommitResponse.Merge(m, src)
 }
 func (m *CommitResponse) XXX_Size() int {
 	return xxx_messageInfo_CommitResponse.Size(m)
@@ -501,9 +511,9 @@ func init() {
 	proto.RegisterType((*CommitResponse)(nil), "monohub.CommitResponse")
 }
 
-func init() { proto.RegisterFile("commit.proto", fileDescriptor_commit_b0b64943c0218a98) }
+func init() { proto.RegisterFile("commit.proto", fileDescriptor_db7163399a465f48) }
 
-var fileDescriptor_commit_b0b64943c0218a98 = []byte{
+var fileDescriptor_db7163399a465f48 = []byte{
 	// 447 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x53, 0x4b, 0x8e, 0xd4, 0x30,
 	0x10, 0x55, 0xfe, 0x93, 0x1a, 0xa6, 0x41, 0x16, 0x42, 0x01, 0xb1, 0x60, 0x02, 0x12, 0x1f, 0x41,
