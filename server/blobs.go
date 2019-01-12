@@ -10,7 +10,7 @@ import (
 	// "gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
-// Commits return commit information
+// Blobs return commit information
 func (s *Server) Blobs(ctx context.Context, req *pb.BlobRequest) (*pb.BlobResponse, error) {
 	log.WithField("context", ctx).Debug("Blobs called")
 	return nil, nil
