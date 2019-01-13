@@ -27,6 +27,7 @@ func (s *Server) Blobs(ctx context.Context, req *pb.BlobRequest) (*pb.BlobRespon
 	if err != nil {
 		return nil, err
 	}
+	defer br.Close()
 
 	data, err := ioutil.ReadAll(br)
 	if err != nil {
