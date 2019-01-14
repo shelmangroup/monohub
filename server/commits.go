@@ -41,29 +41,34 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 		return nil, err
 	}
 
-	stats, err := c.Stats()
-	if err != nil {
-		return nil, err
-	}
-
 	var files []*pb.File
-	for _, fs := range stats {
-		var p *object.Patch
-		var patch string
-		for _, ch := range changes {
-			if ch.To.Name == fs.Name {
-				p, err = ch.Patch()
-				if err != nil {
-					return nil, err
-				}
-				patch = p.String()
-			}
+	var p *object.Patch
+	var patch string
+	for _, ch := range changes {
+		p, err = ch.Patch()
+		if err != nil {
+			return nil, err
 		}
+		patch = p.String()
+
+		var addition int
+		var deletion int
+		for _, fs := range p.Stats() {
+			addition = fs.Addition
+			deletion = fs.Deletion
+		}
+
+		_, to, err := ch.Files()
+		if err != nil {
+			return nil, err
+		}
+
 		file := &pb.File{
-			Filename:  fs.Name,
-			Additions: int64(fs.Addition),
-			Deletions: int64(fs.Deletion),
+			Filename:  ch.To.Name,
+			Additions: int64(addition),
+			Deletions: int64(deletion),
 			Patch:     patch,
+			BlobUrl:   to.Hash.String(),
 		}
 		files = append(files, file)
 	}
