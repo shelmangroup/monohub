@@ -42,20 +42,18 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 	}
 
 	var files []*pb.File
-	var p *object.Patch
-	var patch string
 	for _, ch := range changes {
-		p, err = ch.Patch()
+		p, err := ch.Patch()
 		if err != nil {
 			return nil, err
 		}
-		patch = p.String()
+		patch := p.String()
 
 		var addition int
 		var deletion int
 		for _, fs := range p.Stats() {
-			addition = fs.Addition
-			deletion = fs.Deletion
+			addition += fs.Addition
+			deletion += fs.Deletion
 		}
 
 		_, to, err := ch.Files()
