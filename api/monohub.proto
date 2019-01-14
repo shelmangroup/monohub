@@ -4,6 +4,7 @@ package monohub;
 
 import "commit.proto";
 import "blob.proto";
+import "tree.proto";
 
 import "google/api/annotations.proto";
 
@@ -21,6 +22,11 @@ service MonoHub {
   rpc Blobs(BlobRequest) returns (BlobResponse) {
     option (google.api.http) = {
       get: "/v1/blobs/{sha}"
+    };
+  }
+  rpc Trees(TreeRequest) returns (TreeResponse) {
+    option (google.api.http) = {
+      get: "/v1/trees/{sha}"
     };
   }
 }

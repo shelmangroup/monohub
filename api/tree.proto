@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package monohub;
+
+message TreeRequest {
+    string sha = 1;
+}
+
+message TreeFile {
+    string path = 1;
+    string mode = 2;
+    string type = 3;
+    int64 size = 4;
+    string sha = 5;
+    string url = 6;
+}
+
+message TreeResponse {
+  string sha = 1;
+  repeated TreeFile tree = 2;
+  bool truncated = 3;
+}
