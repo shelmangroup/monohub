@@ -12,7 +12,7 @@ import (
 
 // Trees return tree information
 func (s *Server) Trees(ctx context.Context, req *pb.TreeRequest) (*pb.TreeResponse, error) {
-	log.WithField("context", ctx).Debug("Blobs called")
+	log.WithField("context", ctx).Debug("Trees called")
 	r, err := git.PlainOpen(s.storage.Repo.Path)
 	if err != nil {
 		return nil, err

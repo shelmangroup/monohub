@@ -12,7 +12,7 @@ import (
 	// "gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
-// Blobs return commit information
+// Blobs return blob content
 func (s *Server) Blobs(ctx context.Context, req *pb.BlobRequest) (*pb.BlobResponse, error) {
 	log.WithField("context", ctx).Debug("Blobs called")
 	r, err := git.PlainOpen(s.storage.Repo.Path)
