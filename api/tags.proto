@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package monohub;
+
+message TagRequest {
+    string sha = 1;
+}
+
+message Tagger {
+    string name = 1;
+    string email = 2;
+}
+
+message TagObject {
+    string type = 1;
+    string sha = 2;
+}
+
+message TagResponse {
+  string tag = 1;
+  string node_id = 2;
+  TagObject object = 3;
+  string sha = 4;
+  string message = 5;
+  Tagger tagger = 6;
+}
