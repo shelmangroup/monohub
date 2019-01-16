@@ -23,61 +23,59 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 		log.WithField("context", ctx).Errorf("Commit: %s not found", req.Sha)
 		return nil, err
 	}
-	prevCommit, err := c.Parents().Next()
-	if err != nil {
-		return nil, err
-	}
-	prevTree, err := prevCommit.Tree()
-	if err != nil {
-		return nil, err
-	}
+
 	currentTree, err := c.Tree()
 	if err != nil {
 		return nil, err
 	}
 
-	changes, err := currentTree.Diff(prevTree)
-	if err != nil {
-		return nil, err
-	}
-
-	var files []*pb.File
-	for _, ch := range changes {
-		p, err := ch.Patch()
-		if err != nil {
-			return nil, err
-		}
-		patch := p.String()
-
-		var addition int
-		var deletion int
-		for _, fs := range p.Stats() {
-			addition += fs.Addition
-			deletion += fs.Deletion
-		}
-
-		_, to, err := ch.Files()
-		if err != nil {
-			return nil, err
-		}
-
-		file := &pb.File{
-			Filename:  ch.To.Name,
-			Additions: int64(addition),
-			Deletions: int64(deletion),
-			Patch:     patch,
-			BlobUrl:   to.Hash.String(),
-		}
-		files = append(files, file)
-	}
-
 	pIter := c.Parents()
 	var parents []*pb.Parent
-	err = pIter.ForEach(func(c *object.Commit) error {
+	var files []*pb.File
+	err = pIter.ForEach(func(p *object.Commit) error {
 		parent := &pb.Parent{
-			Sha: c.Hash.String(),
+			Sha: p.Hash.String(),
 		}
 		parents = append(parents, parent)
+
+		prevTree, err := p.Tree()
+		if err != nil {
+			return err
+		}
+
+		changes, err := currentTree.Diff(prevTree)
+		if err != nil {
+			return err
+		}
+
+		for _, ch := range changes {
+			p, err := ch.Patch()
+			if err != nil {
+				return err
+			}
+			patch := p.String()
+
+			var addition int
+			var deletion int
+			for _, fs := range p.Stats() {
+				addition += fs.Addition
+				deletion += fs.Deletion
+			}
+
+			_, to, err := ch.Files()
+			if err != nil {
+				return err
+			}
+
+			file := &pb.File{
+				Filename:  ch.To.Name,
+				Additions: int64(addition),
+				Deletions: int64(deletion),
+				Patch:     patch,
+				BlobUrl:   to.Hash.String(),
+			}
+			files = append(files, file)
+		}
 		return nil
 	})
 	if err != nil {
