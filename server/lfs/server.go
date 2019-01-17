@@ -38,6 +38,9 @@ func (s *Server) CreateLockHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) DeleteLockHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
+func (s *Server) BatchHandler(w http.ResponseWriter, r *http.Request) {
+	return
+}
 func (s *Server) GetContentHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }

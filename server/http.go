@@ -60,6 +60,7 @@ func (s *HttpServer) Run() error {
 	router.HandleFunc("/{repo}/locks", s.lfs.CreateLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
 	router.HandleFunc("/{repo}/locks/{id}/unlock", s.lfs.DeleteLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
 
+	router.HandleFunc("/objects/batch", s.lfs.BatchHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
 	router.HandleFunc("/objects/{oid}", s.lfs.GetContentHandler).Methods("GET", "HEAD").MatcherFunc(lfs.ContentMatcher)
 	router.HandleFunc("/objects/{oid}", s.lfs.GetMetaHandler).Methods("GET", "HEAD").MatcherFunc(lfs.MetaMatcher)
 	router.HandleFunc("/objects/{oid}", s.lfs.PutHandler).Methods("PUT").MatcherFunc(lfs.ContentMatcher)
