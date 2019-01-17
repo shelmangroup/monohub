@@ -9,7 +9,6 @@ import (
 type RequestVars struct {
 	Oid           string
 	Size          int64
-	Repo          string
 	Authorization string
 }
 
