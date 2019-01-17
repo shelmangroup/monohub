@@ -55,10 +55,10 @@ func (s *HttpServer) Run() error {
 	router.HandleFunc("/git-receive-pack", s.receivePackHandler).Methods("POST")
 
 	// GIT LFS
-	router.HandleFunc("/{repo}/locks", s.lfs.LocksHandler).Methods("GET").MatcherFunc(lfs.MetaMatcher)
-	router.HandleFunc("/{repo}/locks/verify", s.lfs.LocksVerifyHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
-	router.HandleFunc("/{repo}/locks", s.lfs.CreateLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
-	router.HandleFunc("/{repo}/locks/{id}/unlock", s.lfs.DeleteLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/locks", s.lfs.LocksHandler).Methods("GET").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/locks", s.lfs.CreateLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/locks/verify", s.lfs.LocksVerifyHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/locks/{id}/unlock", s.lfs.DeleteLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
 
 	router.HandleFunc("/objects/batch", s.lfs.BatchHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
 	router.HandleFunc("/objects/{oid}", s.lfs.GetContentHandler).Methods("GET", "HEAD").MatcherFunc(lfs.ContentMatcher)
