@@ -13,6 +13,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	api "github.com/shelmangroup/monohub/api"
+	"github.com/shelmangroup/monohub/server/lfs"
 	"github.com/shelmangroup/monohub/storage"
 	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
@@ -24,6 +25,7 @@ import (
 type HttpServer struct {
 	storage *storage.Storage
 	server  *Server
+	lfs     *lfs.Server
 }
 
 func NewHttpServer(server *Server) *HttpServer {
@@ -51,6 +53,20 @@ func (s *HttpServer) Run() error {
 	router.HandleFunc("/info/refs", s.getInfoRefsHandler).Queries("service", "{service}").Methods("GET")
 	router.HandleFunc("/git-upload-pack", s.uploadPackHandler).Methods("POST")
 	router.HandleFunc("/git-receive-pack", s.receivePackHandler).Methods("POST")
+
+	// GIT LFS
+	router.HandleFunc("/{repo}/locks", s.lfs.LocksHandler).Methods("GET").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/{repo}/locks/verify", s.lfs.LocksVerifyHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/{repo}/locks", s.lfs.CreateLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/{repo}/locks/{id}/unlock", s.lfs.DeleteLockHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
+
+	router.HandleFunc("/objects/{oid}", s.lfs.GetContentHandler).Methods("GET", "HEAD").MatcherFunc(lfs.ContentMatcher)
+	router.HandleFunc("/objects/{oid}", s.lfs.GetMetaHandler).Methods("GET", "HEAD").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/objects/{oid}", s.lfs.PutHandler).Methods("PUT").MatcherFunc(lfs.ContentMatcher)
+	router.HandleFunc("/objects", s.lfs.PostHandler).Methods("POST").MatcherFunc(lfs.MetaMatcher)
+	router.HandleFunc("/verify/{oid}", s.lfs.VerifyHandler).Methods("POST")
+	// END GIT LFS
+
 	router.PathPrefix("/").Handler(gwmux)
 
 	log.WithField("address", *listenAddress).Info("Starting HTTP server")

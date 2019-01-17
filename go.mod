@@ -4,6 +4,7 @@ require (
 	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc
 	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf
 	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973
+	github.com/boltdb/bolt v1.3.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/emirpasic/gods v1.12.0
 	github.com/golang/protobuf v1.2.0
