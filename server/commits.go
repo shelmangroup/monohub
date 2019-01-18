@@ -76,7 +76,7 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 				Additions: int64(addition),
 				Deletions: int64(deletion),
 				Patch:     patch.String(),
-				BlobUrl:   to.Hash.String(),
+				BlobUrl:   "blobs/" + to.Hash.String(),
 			}
 			files = append(files, file)
 		}
