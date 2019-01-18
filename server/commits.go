@@ -31,6 +31,8 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 	}
 
 	pIter := c.Parents()
+	var totalAdditions int
+	var totalDeletions int
 	var parents []*pb.Parent
 	var files []*pb.File
 	err = pIter.ForEach(func(p *object.Commit) error {
@@ -44,23 +46,24 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 			return err
 		}
 
-		changes, err := currentTree.Diff(prevTree)
+		changes, err := prevTree.Diff(currentTree)
 		if err != nil {
 			return err
 		}
 
 		for _, ch := range changes {
-			p, err := ch.Patch()
+			patch, err := ch.Patch()
 			if err != nil {
 				return err
 			}
-			patch := p.String()
 
 			var addition int
 			var deletion int
-			for _, fs := range p.Stats() {
-				addition += fs.Addition
-				deletion += fs.Deletion
+			for _, fstat := range patch.Stats() {
+				addition += fstat.Addition
+				deletion += fstat.Deletion
+				totalAdditions += fstat.Addition
+				totalDeletions += fstat.Deletion
 			}
 
 			_, to, err := ch.Files()
@@ -72,7 +75,7 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 				Filename:  ch.To.Name,
 				Additions: int64(addition),
 				Deletions: int64(deletion),
-				Patch:     patch,
+				Patch:     patch.String(),
 				BlobUrl:   to.Hash.String(),
 			}
 			files = append(files, file)
@@ -95,6 +98,10 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 			Name:  c.Author.Name,
 			Email: c.Author.Email,
 		},
+		Stats: &pb.Stats{
+			Additions: int64(totalAdditions),
+			Deletions: int64(totalDeletions),
+		},
 		Commit: &pb.Commit{
 			Committer: &pb.Author{
 				Id:    1,
@@ -109,7 +116,6 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 			},
 		},
 		Files:   files,
-		Stats:   &pb.Stats{},
 		Parents: parents,
 	}, nil
 }
