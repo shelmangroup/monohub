@@ -3,11 +3,9 @@
 
 package monohub
 
-import (
-	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	math "math"
-)
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -21,7 +19,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type ReferenceRequest struct {
-	Ref                  string   `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
+	Ref                  string   `protobuf:"bytes,1,opt,name=ref" json:"ref,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -31,17 +29,16 @@ func (m *ReferenceRequest) Reset()         { *m = ReferenceRequest{} }
 func (m *ReferenceRequest) String() string { return proto.CompactTextString(m) }
 func (*ReferenceRequest) ProtoMessage()    {}
 func (*ReferenceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6b165e33ad62994c, []int{0}
+	return fileDescriptor_reference_928cccbef32ec0d6, []int{0}
 }
-
 func (m *ReferenceRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ReferenceRequest.Unmarshal(m, b)
 }
 func (m *ReferenceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ReferenceRequest.Marshal(b, m, deterministic)
 }
-func (m *ReferenceRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ReferenceRequest.Merge(m, src)
+func (dst *ReferenceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReferenceRequest.Merge(dst, src)
 }
 func (m *ReferenceRequest) XXX_Size() int {
 	return xxx_messageInfo_ReferenceRequest.Size(m)
@@ -60,8 +57,8 @@ func (m *ReferenceRequest) GetRef() string {
 }
 
 type RefObject struct {
-	Type                 string   `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
-	Sha                  string   `protobuf:"bytes,2,opt,name=sha,proto3" json:"sha,omitempty"`
+	Type                 string   `protobuf:"bytes,1,opt,name=type" json:"type,omitempty"`
+	Sha                  string   `protobuf:"bytes,2,opt,name=sha" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -71,17 +68,16 @@ func (m *RefObject) Reset()         { *m = RefObject{} }
 func (m *RefObject) String() string { return proto.CompactTextString(m) }
 func (*RefObject) ProtoMessage()    {}
 func (*RefObject) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6b165e33ad62994c, []int{1}
+	return fileDescriptor_reference_928cccbef32ec0d6, []int{1}
 }
-
 func (m *RefObject) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_RefObject.Unmarshal(m, b)
 }
 func (m *RefObject) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_RefObject.Marshal(b, m, deterministic)
 }
-func (m *RefObject) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RefObject.Merge(m, src)
+func (dst *RefObject) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefObject.Merge(dst, src)
 }
 func (m *RefObject) XXX_Size() int {
 	return xxx_messageInfo_RefObject.Size(m)
@@ -107,9 +103,9 @@ func (m *RefObject) GetSha() string {
 }
 
 type ReferenceResponse struct {
-	Ref                  string       `protobuf:"bytes,1,opt,name=ref,proto3" json:"ref,omitempty"`
-	NodeId               string       `protobuf:"bytes,2,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
-	Objects              []*RefObject `protobuf:"bytes,3,rep,name=objects,proto3" json:"objects,omitempty"`
+	Ref                  string       `protobuf:"bytes,1,opt,name=ref" json:"ref,omitempty"`
+	NodeId               string       `protobuf:"bytes,2,opt,name=node_id,json=nodeId" json:"node_id,omitempty"`
+	Objects              []*RefObject `protobuf:"bytes,3,rep,name=objects" json:"objects,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
 	XXX_unrecognized     []byte       `json:"-"`
 	XXX_sizecache        int32        `json:"-"`
@@ -119,17 +115,16 @@ func (m *ReferenceResponse) Reset()         { *m = ReferenceResponse{} }
 func (m *ReferenceResponse) String() string { return proto.CompactTextString(m) }
 func (*ReferenceResponse) ProtoMessage()    {}
 func (*ReferenceResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6b165e33ad62994c, []int{2}
+	return fileDescriptor_reference_928cccbef32ec0d6, []int{2}
 }
-
 func (m *ReferenceResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ReferenceResponse.Unmarshal(m, b)
 }
 func (m *ReferenceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ReferenceResponse.Marshal(b, m, deterministic)
 }
-func (m *ReferenceResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ReferenceResponse.Merge(m, src)
+func (dst *ReferenceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReferenceResponse.Merge(dst, src)
 }
 func (m *ReferenceResponse) XXX_Size() int {
 	return xxx_messageInfo_ReferenceResponse.Size(m)
@@ -167,9 +162,9 @@ func init() {
 	proto.RegisterType((*ReferenceResponse)(nil), "monohub.ReferenceResponse")
 }
 
-func init() { proto.RegisterFile("reference.proto", fileDescriptor_6b165e33ad62994c) }
+func init() { proto.RegisterFile("reference.proto", fileDescriptor_reference_928cccbef32ec0d6) }
 
-var fileDescriptor_6b165e33ad62994c = []byte{
+var fileDescriptor_reference_928cccbef32ec0d6 = []byte{
 	// 179 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2f, 0x4a, 0x4d, 0x4b,
 	0x2d, 0x4a, 0xcd, 0x4b, 0x4e, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xcf, 0xcd, 0xcf,

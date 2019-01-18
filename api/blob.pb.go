@@ -3,11 +3,9 @@
 
 package monohub
 
-import (
-	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	math "math"
-)
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -21,7 +19,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type BlobRequest struct {
-	Sha                  string   `protobuf:"bytes,1,opt,name=sha,proto3" json:"sha,omitempty"`
+	Sha                  string   `protobuf:"bytes,1,opt,name=sha" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -31,17 +29,16 @@ func (m *BlobRequest) Reset()         { *m = BlobRequest{} }
 func (m *BlobRequest) String() string { return proto.CompactTextString(m) }
 func (*BlobRequest) ProtoMessage()    {}
 func (*BlobRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6903d1e8a20272e8, []int{0}
+	return fileDescriptor_blob_327064cdde75d881, []int{0}
 }
-
 func (m *BlobRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BlobRequest.Unmarshal(m, b)
 }
 func (m *BlobRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_BlobRequest.Marshal(b, m, deterministic)
 }
-func (m *BlobRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BlobRequest.Merge(m, src)
+func (dst *BlobRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BlobRequest.Merge(dst, src)
 }
 func (m *BlobRequest) XXX_Size() int {
 	return xxx_messageInfo_BlobRequest.Size(m)
@@ -60,11 +57,11 @@ func (m *BlobRequest) GetSha() string {
 }
 
 type BlobResponse struct {
-	Sha                  string   `protobuf:"bytes,1,opt,name=sha,proto3" json:"sha,omitempty"`
-	Content              string   `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
-	Encoding             string   `protobuf:"bytes,3,opt,name=encoding,proto3" json:"encoding,omitempty"`
-	Url                  string   `protobuf:"bytes,4,opt,name=url,proto3" json:"url,omitempty"`
-	Size                 int64    `protobuf:"varint,5,opt,name=size,proto3" json:"size,omitempty"`
+	Sha                  string   `protobuf:"bytes,1,opt,name=sha" json:"sha,omitempty"`
+	Content              string   `protobuf:"bytes,2,opt,name=content" json:"content,omitempty"`
+	Encoding             string   `protobuf:"bytes,3,opt,name=encoding" json:"encoding,omitempty"`
+	Url                  string   `protobuf:"bytes,4,opt,name=url" json:"url,omitempty"`
+	Size                 int64    `protobuf:"varint,5,opt,name=size" json:"size,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -74,17 +71,16 @@ func (m *BlobResponse) Reset()         { *m = BlobResponse{} }
 func (m *BlobResponse) String() string { return proto.CompactTextString(m) }
 func (*BlobResponse) ProtoMessage()    {}
 func (*BlobResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6903d1e8a20272e8, []int{1}
+	return fileDescriptor_blob_327064cdde75d881, []int{1}
 }
-
 func (m *BlobResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_BlobResponse.Unmarshal(m, b)
 }
 func (m *BlobResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_BlobResponse.Marshal(b, m, deterministic)
 }
-func (m *BlobResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BlobResponse.Merge(m, src)
+func (dst *BlobResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BlobResponse.Merge(dst, src)
 }
 func (m *BlobResponse) XXX_Size() int {
 	return xxx_messageInfo_BlobResponse.Size(m)
@@ -135,9 +131,9 @@ func init() {
 	proto.RegisterType((*BlobResponse)(nil), "monohub.BlobResponse")
 }
 
-func init() { proto.RegisterFile("blob.proto", fileDescriptor_6903d1e8a20272e8) }
+func init() { proto.RegisterFile("blob.proto", fileDescriptor_blob_327064cdde75d881) }
 
-var fileDescriptor_6903d1e8a20272e8 = []byte{
+var fileDescriptor_blob_327064cdde75d881 = []byte{
 	// 158 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0xca, 0xc9, 0x4f,
 	0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xcf, 0xcd, 0xcf, 0xcb, 0xcf, 0x28, 0x4d, 0x52,

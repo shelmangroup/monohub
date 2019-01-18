@@ -20,6 +20,7 @@ message Author {
     string login = 2;
     string name = 3;
     string email = 4;
+    google.protobuf.Timestamp date = 5;
 }
 
 message Tree {
@@ -32,7 +33,6 @@ message Commit {
     string message = 3;
     Tree tree = 4;
     Author author = 5;
-    google.protobuf.Timestamp date = 6;
 }
 
 message File {

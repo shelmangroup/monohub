@@ -3,11 +3,9 @@
 
 package monohub
 
-import (
-	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	math "math"
-)
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -21,7 +19,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type TreeRequest struct {
-	Sha                  string   `protobuf:"bytes,1,opt,name=sha,proto3" json:"sha,omitempty"`
+	Sha                  string   `protobuf:"bytes,1,opt,name=sha" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -31,17 +29,16 @@ func (m *TreeRequest) Reset()         { *m = TreeRequest{} }
 func (m *TreeRequest) String() string { return proto.CompactTextString(m) }
 func (*TreeRequest) ProtoMessage()    {}
 func (*TreeRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_cb3889276909882a, []int{0}
+	return fileDescriptor_tree_5d8c58ff791eee28, []int{0}
 }
-
 func (m *TreeRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TreeRequest.Unmarshal(m, b)
 }
 func (m *TreeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TreeRequest.Marshal(b, m, deterministic)
 }
-func (m *TreeRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TreeRequest.Merge(m, src)
+func (dst *TreeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TreeRequest.Merge(dst, src)
 }
 func (m *TreeRequest) XXX_Size() int {
 	return xxx_messageInfo_TreeRequest.Size(m)
@@ -60,12 +57,12 @@ func (m *TreeRequest) GetSha() string {
 }
 
 type TreeFile struct {
-	Path                 string   `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
-	Mode                 string   `protobuf:"bytes,2,opt,name=mode,proto3" json:"mode,omitempty"`
-	Type                 string   `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	Size                 int64    `protobuf:"varint,4,opt,name=size,proto3" json:"size,omitempty"`
-	Sha                  string   `protobuf:"bytes,5,opt,name=sha,proto3" json:"sha,omitempty"`
-	Url                  string   `protobuf:"bytes,6,opt,name=url,proto3" json:"url,omitempty"`
+	Path                 string   `protobuf:"bytes,1,opt,name=path" json:"path,omitempty"`
+	Mode                 string   `protobuf:"bytes,2,opt,name=mode" json:"mode,omitempty"`
+	Type                 string   `protobuf:"bytes,3,opt,name=type" json:"type,omitempty"`
+	Size                 int64    `protobuf:"varint,4,opt,name=size" json:"size,omitempty"`
+	Sha                  string   `protobuf:"bytes,5,opt,name=sha" json:"sha,omitempty"`
+	Url                  string   `protobuf:"bytes,6,opt,name=url" json:"url,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -75,17 +72,16 @@ func (m *TreeFile) Reset()         { *m = TreeFile{} }
 func (m *TreeFile) String() string { return proto.CompactTextString(m) }
 func (*TreeFile) ProtoMessage()    {}
 func (*TreeFile) Descriptor() ([]byte, []int) {
-	return fileDescriptor_cb3889276909882a, []int{1}
+	return fileDescriptor_tree_5d8c58ff791eee28, []int{1}
 }
-
 func (m *TreeFile) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TreeFile.Unmarshal(m, b)
 }
 func (m *TreeFile) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TreeFile.Marshal(b, m, deterministic)
 }
-func (m *TreeFile) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TreeFile.Merge(m, src)
+func (dst *TreeFile) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TreeFile.Merge(dst, src)
 }
 func (m *TreeFile) XXX_Size() int {
 	return xxx_messageInfo_TreeFile.Size(m)
@@ -139,9 +135,9 @@ func (m *TreeFile) GetUrl() string {
 }
 
 type TreeResponse struct {
-	Sha                  string      `protobuf:"bytes,1,opt,name=sha,proto3" json:"sha,omitempty"`
-	Tree                 []*TreeFile `protobuf:"bytes,2,rep,name=tree,proto3" json:"tree,omitempty"`
-	Truncated            bool        `protobuf:"varint,3,opt,name=truncated,proto3" json:"truncated,omitempty"`
+	Sha                  string      `protobuf:"bytes,1,opt,name=sha" json:"sha,omitempty"`
+	Tree                 []*TreeFile `protobuf:"bytes,2,rep,name=tree" json:"tree,omitempty"`
+	Truncated            bool        `protobuf:"varint,3,opt,name=truncated" json:"truncated,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
 	XXX_unrecognized     []byte      `json:"-"`
 	XXX_sizecache        int32       `json:"-"`
@@ -151,17 +147,16 @@ func (m *TreeResponse) Reset()         { *m = TreeResponse{} }
 func (m *TreeResponse) String() string { return proto.CompactTextString(m) }
 func (*TreeResponse) ProtoMessage()    {}
 func (*TreeResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_cb3889276909882a, []int{2}
+	return fileDescriptor_tree_5d8c58ff791eee28, []int{2}
 }
-
 func (m *TreeResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TreeResponse.Unmarshal(m, b)
 }
 func (m *TreeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TreeResponse.Marshal(b, m, deterministic)
 }
-func (m *TreeResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TreeResponse.Merge(m, src)
+func (dst *TreeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TreeResponse.Merge(dst, src)
 }
 func (m *TreeResponse) XXX_Size() int {
 	return xxx_messageInfo_TreeResponse.Size(m)
@@ -199,9 +194,9 @@ func init() {
 	proto.RegisterType((*TreeResponse)(nil), "monohub.TreeResponse")
 }
 
-func init() { proto.RegisterFile("tree.proto", fileDescriptor_cb3889276909882a) }
+func init() { proto.RegisterFile("tree.proto", fileDescriptor_tree_5d8c58ff791eee28) }
 
-var fileDescriptor_cb3889276909882a = []byte{
+var fileDescriptor_tree_5d8c58ff791eee28 = []byte{
 	// 208 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x64, 0x90, 0xcd, 0x6a, 0x84, 0x30,
 	0x10, 0x80, 0xd1, 0x58, 0xab, 0x63, 0x0f, 0x6d, 0x4e, 0x39, 0x14, 0x2a, 0x42, 0xc1, 0x93, 0x87,

@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 
+	"github.com/golang/protobuf/ptypes"
 	pb "github.com/shelmangroup/monohub/api"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/src-d/go-git.v4"
@@ -81,6 +82,10 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 	if err != nil {
 		return nil, err
 	}
+	commitTimestamp, err := ptypes.TimestampProto(c.Committer.When)
+	if err != nil {
+		return nil, err
+	}
 
 	return &pb.CommitResponse{
 		Sha: c.Hash.String(),
@@ -96,6 +101,7 @@ func (s *Server) Commits(ctx context.Context, req *pb.CommitRequest) (*pb.Commit
 				Login: c.Committer.Email,
 				Name:  c.Committer.Name,
 				Email: c.Committer.Email,
+				Date:  commitTimestamp,
 			},
 			Message: c.Message,
 			Tree: &pb.Tree{

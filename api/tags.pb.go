@@ -3,11 +3,9 @@
 
 package monohub
 
-import (
-	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	math "math"
-)
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -21,7 +19,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type TagRequest struct {
-	Sha                  string   `protobuf:"bytes,1,opt,name=sha,proto3" json:"sha,omitempty"`
+	Sha                  string   `protobuf:"bytes,1,opt,name=sha" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -31,17 +29,16 @@ func (m *TagRequest) Reset()         { *m = TagRequest{} }
 func (m *TagRequest) String() string { return proto.CompactTextString(m) }
 func (*TagRequest) ProtoMessage()    {}
 func (*TagRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e7d9cbcae1e528f6, []int{0}
+	return fileDescriptor_tags_3c60476d1791ee75, []int{0}
 }
-
 func (m *TagRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TagRequest.Unmarshal(m, b)
 }
 func (m *TagRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TagRequest.Marshal(b, m, deterministic)
 }
-func (m *TagRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TagRequest.Merge(m, src)
+func (dst *TagRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TagRequest.Merge(dst, src)
 }
 func (m *TagRequest) XXX_Size() int {
 	return xxx_messageInfo_TagRequest.Size(m)
@@ -60,8 +57,8 @@ func (m *TagRequest) GetSha() string {
 }
 
 type Tagger struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Name                 string   `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Email                string   `protobuf:"bytes,2,opt,name=email" json:"email,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -71,17 +68,16 @@ func (m *Tagger) Reset()         { *m = Tagger{} }
 func (m *Tagger) String() string { return proto.CompactTextString(m) }
 func (*Tagger) ProtoMessage()    {}
 func (*Tagger) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e7d9cbcae1e528f6, []int{1}
+	return fileDescriptor_tags_3c60476d1791ee75, []int{1}
 }
-
 func (m *Tagger) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Tagger.Unmarshal(m, b)
 }
 func (m *Tagger) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Tagger.Marshal(b, m, deterministic)
 }
-func (m *Tagger) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Tagger.Merge(m, src)
+func (dst *Tagger) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Tagger.Merge(dst, src)
 }
 func (m *Tagger) XXX_Size() int {
 	return xxx_messageInfo_Tagger.Size(m)
@@ -107,8 +103,8 @@ func (m *Tagger) GetEmail() string {
 }
 
 type TagObject struct {
-	Type                 string   `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
-	Sha                  string   `protobuf:"bytes,2,opt,name=sha,proto3" json:"sha,omitempty"`
+	Type                 string   `protobuf:"bytes,1,opt,name=type" json:"type,omitempty"`
+	Sha                  string   `protobuf:"bytes,2,opt,name=sha" json:"sha,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -118,17 +114,16 @@ func (m *TagObject) Reset()         { *m = TagObject{} }
 func (m *TagObject) String() string { return proto.CompactTextString(m) }
 func (*TagObject) ProtoMessage()    {}
 func (*TagObject) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e7d9cbcae1e528f6, []int{2}
+	return fileDescriptor_tags_3c60476d1791ee75, []int{2}
 }
-
 func (m *TagObject) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TagObject.Unmarshal(m, b)
 }
 func (m *TagObject) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TagObject.Marshal(b, m, deterministic)
 }
-func (m *TagObject) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TagObject.Merge(m, src)
+func (dst *TagObject) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TagObject.Merge(dst, src)
 }
 func (m *TagObject) XXX_Size() int {
 	return xxx_messageInfo_TagObject.Size(m)
@@ -154,12 +149,12 @@ func (m *TagObject) GetSha() string {
 }
 
 type TagResponse struct {
-	Tag                  string     `protobuf:"bytes,1,opt,name=tag,proto3" json:"tag,omitempty"`
-	NodeId               string     `protobuf:"bytes,2,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
-	Object               *TagObject `protobuf:"bytes,3,opt,name=object,proto3" json:"object,omitempty"`
-	Sha                  string     `protobuf:"bytes,4,opt,name=sha,proto3" json:"sha,omitempty"`
-	Message              string     `protobuf:"bytes,5,opt,name=message,proto3" json:"message,omitempty"`
-	Tagger               *Tagger    `protobuf:"bytes,6,opt,name=tagger,proto3" json:"tagger,omitempty"`
+	Tag                  string     `protobuf:"bytes,1,opt,name=tag" json:"tag,omitempty"`
+	NodeId               string     `protobuf:"bytes,2,opt,name=node_id,json=nodeId" json:"node_id,omitempty"`
+	Object               *TagObject `protobuf:"bytes,3,opt,name=object" json:"object,omitempty"`
+	Sha                  string     `protobuf:"bytes,4,opt,name=sha" json:"sha,omitempty"`
+	Message              string     `protobuf:"bytes,5,opt,name=message" json:"message,omitempty"`
+	Tagger               *Tagger    `protobuf:"bytes,6,opt,name=tagger" json:"tagger,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
 	XXX_unrecognized     []byte     `json:"-"`
 	XXX_sizecache        int32      `json:"-"`
@@ -169,17 +164,16 @@ func (m *TagResponse) Reset()         { *m = TagResponse{} }
 func (m *TagResponse) String() string { return proto.CompactTextString(m) }
 func (*TagResponse) ProtoMessage()    {}
 func (*TagResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e7d9cbcae1e528f6, []int{3}
+	return fileDescriptor_tags_3c60476d1791ee75, []int{3}
 }
-
 func (m *TagResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_TagResponse.Unmarshal(m, b)
 }
 func (m *TagResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_TagResponse.Marshal(b, m, deterministic)
 }
-func (m *TagResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TagResponse.Merge(m, src)
+func (dst *TagResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TagResponse.Merge(dst, src)
 }
 func (m *TagResponse) XXX_Size() int {
 	return xxx_messageInfo_TagResponse.Size(m)
@@ -239,9 +233,9 @@ func init() {
 	proto.RegisterType((*TagResponse)(nil), "monohub.TagResponse")
 }
 
-func init() { proto.RegisterFile("tags.proto", fileDescriptor_e7d9cbcae1e528f6) }
+func init() { proto.RegisterFile("tags.proto", fileDescriptor_tags_3c60476d1791ee75) }
 
-var fileDescriptor_e7d9cbcae1e528f6 = []byte{
+var fileDescriptor_tags_3c60476d1791ee75 = []byte{
 	// 236 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x4c, 0x50, 0x4d, 0x4b, 0xc4, 0x40,
 	0x0c, 0xa5, 0xfb, 0x31, 0x65, 0xb3, 0x07, 0x25, 0x08, 0xce, 0x49, 0x96, 0x5e, 0x5c, 0x3c, 0x14,
